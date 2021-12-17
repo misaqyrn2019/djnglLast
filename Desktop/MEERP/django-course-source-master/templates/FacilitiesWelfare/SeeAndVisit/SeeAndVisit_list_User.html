@@ -1,0 +1,69 @@
+{% extends 'Template/base.html' %}
+
+{% block title %}{% block title-meta %}
+دید و بازدید سازمانی
+{% endblock %}{% endblock %}
+
+
+{% block Create %}
+    <span class="badge text-primary">لیست دید و بازدید سازمانی</span>
+{% endblock %}
+
+{% block main %}
+    {% if object_list %}
+    <table class="tableResponse">
+        <thead>
+            <th>نسبت</th>
+            <th>نام بیمار</th>
+            <th>نام خانوادگی بیمار</th>
+            <th>زمان عیادت</th>
+            <th>توضیحات</th>
+        </thead>
+        <tbody>
+            {% for item in object_list %}
+                <tr>
+                    <td data-label="نسبت">
+                        {% if item.ConsumerItems == 'F' %}
+                            <span>پدر</span>
+                        {% elif item.ConsumerItems == 'M' %}
+                            <span>مادر</span>
+                        {% elif item.ConsumerItems == 'B' %}
+                            <span>برادر</span>
+                        {% elif item.ConsumerItems == 'S' %}
+                            <span>خواهر</span>
+                        {% elif item.ConsumerItems == 'D' %}
+                            <span>دایی</span>
+                        {% elif item.ConsumerItems == 'A' %}
+                            <span>عمو</span>
+                        {% elif item.ConsumerItems == 'K' %}
+                            <span>خاله</span>
+                        {% elif item.ConsumerItems == 'E' %}
+                            <span>عمه</span>
+                        {% elif item.ConsumerItems == 'P' %}
+                            <span>پدربزرگ</span>
+                        {% elif item.ConsumerItems == 'Q' %}
+                            <span>مادربزرگ</span>
+                        {% endif %}
+                    </td>
+                    <td data-label="نام بیمار">{{item.Name}}</td>
+                    <td data-label="نام خانوادگی بیمار">{{item.Family}}</td>
+                    <td data-label="زمان عیادت">{{item.jDateTimeVisit}}</td>
+                    <td data-label="توضیحات">{{item.Description|safe}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            از شما تا به حال دید بازدید سازمانی انجام نشده است
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block JS %}
+<script>
+	$('#SAV a').addClass('active')
+</script>
+{% endblock %}

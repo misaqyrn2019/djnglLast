@@ -1,0 +1,65 @@
+{% extends 'Template/base.html' %}
+
+
+{% block title %}{% block title-meta %}
+	لیست گروه
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'inventory:CategoryCommodity-Create' %}">تعریف گروه</a>
+{% endblock %}
+
+
+{% block main %}
+    {% if object_list %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>نام گروه</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in object_list %}
+            <tr>
+                <td data-label="ردیف">{{item.Id}}</td>
+                <td data-label="نام گروه">{{item.Name}}</td>
+                <td data-label="عملیات">
+                    {% if user.is_superuser or user.is_storekeeper %}
+                    <a class="badge text-danger" href="{% url 'inventory:CategoryCommodity-Delete' item.pk %}">حذف</a>
+                    <a class="badge text-succsess" href="{% url 'inventory:CategoryCommodity-update' item.pk %}">ویرایش</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="row pagination">
+        <span class="step-links">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeCC' page_obj.previous_page_number %}">
+                        قبلی
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeCC' page_obj.next_page_number %}">
+                        بعدی
+                    </a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست دسته خالی است
+            <br>
+            <a href="{% url 'inventory:CategoryCommodity-Create' %}">
+                تعریف دسته
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}

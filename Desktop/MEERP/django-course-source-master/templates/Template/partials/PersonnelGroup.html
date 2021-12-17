@@ -1,0 +1,41 @@
+<section>
+    <label id="SeC">
+        <input type="checkbox" onchange="FnChange()" id="CHKTF" name="CHKTF"/>
+        انتخاب دسته ای
+    </label>
+    <section id="GroupSelect">
+        <label>
+            گروه
+            <label>
+                انتخاب کل
+                <input type="checkbox" onchange="FnChange()" id="CHKGRP" name="CHKGRP"/>
+            </label>
+        </label>
+        <select id="IdGroup" name="IdGroup" class="select form-control" onchange="FNReadPersonnel()"></select>
+        <section>
+            <label>
+                <abbr title="میتوانید با نگه داشتن کلید CTRL کیبورد چندین پرسنل انتخاب نمائید">
+                    پرسنل
+                </abbr>
+            </label>
+            <select multiple="multiple" id="UserPersonnel" class="select form-control"></select>
+            <input type="hidden" value="" id="Personnels" name="Personnels" />
+        </section>
+    </section>
+    <section id="OneSelct">
+        <label for="id_status" class=" requiredField">
+            پرسنل <span class="asteriskField">*</span>
+        </label>
+        <a href="#" type="button" data-toggle="modal" data-target="#myModelPersonnel">
+            <img src = "/static/admin/img/icon-addlink.svg">
+        </a>
+        <select id="IdUser" name="IdUser" class="select form-control"></select>
+    </section>
+</section>
+
+
+<script>
+    $(document).ready(function(){
+        $("#UserPersonnel").select2();
+    });
+</script>

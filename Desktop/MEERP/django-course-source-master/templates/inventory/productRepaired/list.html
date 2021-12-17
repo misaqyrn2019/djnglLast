@@ -1,0 +1,85 @@
+{% extends 'Template/base.html' %}
+{% load humanize %}
+
+{% block title %}{% block title-meta %}
+	لیست تعمیرات کالاها
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'inventory:productRepaired-Create' %}">تعریف تعمیر کالا</a>
+{% endblock %}
+
+
+{% block main %}
+    {% if object_list %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>نام کالا</th>
+                <th>نام مشتری</th>
+                <th>شماره سریال</th>
+                <th>تاریخ ثبت</th>
+                <th>تاریخ تحویل</th>
+                <th>توضیحات</th>
+                <th>وضعیت</th>
+                <th>انبار</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in object_list %}
+                <tr>
+                    <td data-label="ردیف">{{item.Id}}</>
+                    <td data-label="نام کالا">{{item.IdCommodity}}</>
+                    <td data-label="نام مشتری">{{item.IdCustomer}}</>
+                    <td data-label="شماره سریال">{{item.SerialNumber}}</>
+                    <td data-label="تاریخ ثبت">{{item.DateRegistration|naturaltime}}</>
+                    <td data-label="تاریخ تحویل">{{item.jDateDelivery}}</>
+                    <td data-label="توضیحات">{{item.Description|safe}}</>
+                    <td data-label="وضعیت">
+                        {% if item.Status == 'Y' %}
+                            <p>تعمیر شده</p>
+                        {% elif item.Status == 'N' %}
+                            <p>تعمیر نشده</p>
+                        {% endif %}
+                    </td>
+                    <td data-label="انبار">{{item.IdStoreroom}}</td>
+                    <td data-label="عملیات">
+                        {% if user.is_superuser or user.is_storekeeper %}
+                        <a class="badge text-danger" href="{% url 'inventory:productRepaired-Delete' item.pk %}">حذف</a>
+                        <a class="badge text-succsess" href="{% url 'inventory:productRepaired-update' item.pk %}">ویرایش</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row pagination">
+        <span class="step-links">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homePR' page_obj.previous_page_number %}">
+                        قبلی
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homePR' page_obj.next_page_number %}">
+                        بعدی
+                    </a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست تعمیر خالی است
+            <br>
+            <a href="{% url 'inventory:productRepaired-Create' %}">
+                تعریف تعمیر کالاها
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}

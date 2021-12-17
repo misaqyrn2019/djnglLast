@@ -1,0 +1,89 @@
+{% extends 'Template/base.html' %}
+
+{% block title %}{% block title-meta %}
+	ثبت نام های پروژه
+{% endblock %}{% endblock %}
+
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'FacilitiesWelfare:CreateRPR' %}">تعریف پروژه جدید</a>
+{% endblock %}
+
+{% block main %}
+    {% if object_list %}
+    <table id="TblRegProject" class="table table-striped display table-bordered tableResponse responsive" style="width:100%">
+        <thead>
+            <tr>
+                <th>تاریخ ثبت</th>
+                <th>پرسنل</div>
+                <th>نام پروژه</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in object_list %}
+            <tr>
+                <td data-label="تاریخ ثبت">{{item.jRegisterDateTime}}</td>
+                <td data-label="کاربر">{{item.IdUser}}</td>
+                <td data-label="نام پروژه">{{item.IdProject}}</td>
+                <td data-label="عملیات">
+                    {% if user.is_superuser or user.is_FacilitiesWelfare %}
+                    <a class="badge text-danger" href="{% url 'FacilitiesWelfare:RegisterProjects-Delete' item.pk %}">حذف</a>
+                    <a class="badge text-succsess" href="{% url 'FacilitiesWelfare:RegisterProjects-update' item.pk %}">ویرایش</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tfoot>
+    </table>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست پروژه های درخواستی خالی است
+            <br>
+            <a href="{% url 'FacilitiesWelfare:CreateRPR' %}">
+                تعریف پروژه درخواستی
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block JS %}
+<script>
+    $(document).ready(function(){
+        function fn(){
+            $("#A0").select2();
+            $("#A1").select2();
+            $("#A2").select2();
+        };
+        $('#TblRegProject').DataTable({
+        initComplete: function () {
+            this.api().columns([0,1,2]).every( function (ee) {
+                var column = this;
+                var select = $('<select style="width:100% !important" id="A'+ ee +'"><option value=""></option></select>')
+                    .appendTo( $(column.footer()).empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^'+val+'$' : '', true, false)
+                            .draw();
+                    });
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>')
+                });
+                fn();
+            });
+            }
+        });
+    });
+</script>
+{% endblock %}

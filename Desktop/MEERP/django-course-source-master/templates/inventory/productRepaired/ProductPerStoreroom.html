@@ -1,0 +1,62 @@
+{% extends 'Template/base.html' %}
+{% load humanize %}
+
+{% block title %}{% block title-meta %}
+	لیست تعمیر کالاها
+{% endblock %}{% endblock %}
+
+{% block Css %}
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css">
+    <style type="text/css">
+    *{
+        direction:rtl;
+    }
+    .SPNName{
+        color:rgb(71, 67, 67);
+        text-decoration: underline;
+    }
+    @media print{
+        button,h2,.main-footer{
+            display: none !important;
+        }
+    }
+    </style>
+{% endblock %}
+{% block JS %}
+    <!-- <script type="text/javascript">
+        window.onload = print();
+    </script> -->
+{% endblock %}
+{% block main %}
+{% if productRepaired %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>انبار</th>
+                <th>نام کالا</th>
+                <th>مشتری</th>
+                <th>سریال کالا</th>
+                <th>تاریخ ثبت</th>
+                <th>تاریخ تحویل</th>
+                <th>توضیحات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in productRepaired %}
+                <tr>
+                    <td data-label="انبار">{{item.IdStoreroom}}</td>
+                    <td data-label="نام کالا">{{item.IdCommodity}}</td>
+                    <td data-label="مشتری">{{item.IdCustomer}}</td>
+                    <td data-label="سریال کالا">{{item.SerialNumber}}</td>
+                    <td data-label="تاریخ ثبت">{{item.jDateRegistration}}</td>
+                    <td data-label="تاریخ تحویل">{{item.jDateDelivery}}</td>
+                    <td data-label="توضیحات">{{item.Description|safe}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h2 style="text-align: center;">هنوز مشتری ثبت نشده است</h2>
+{% endif %}
+<button onclick="print()" class="btn btn-info">پرینت گزارش</button>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	درخواست پروژه برای کاربر
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">افزودن درخواست</h3>
+		</div>
+		<div class="card-body">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						<label for="id_status" class=" requiredField">
+							پرسنل <span class="asteriskField">*</span>
+						</label>
+						<a href="#" type="button" data-toggle="modal" data-target="#myModelPersonnel">
+							<img src = "/static/admin/img/icon-addlink.svg">
+						</a>
+						<select id="IdUser" name="IdUser" class="select form-control"></select>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.IdProject|as_crispy_field }}
+					</div>
+				</div>
+				<button class="btn btn-success">ثبت پروژه</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:RegisterProjects-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+	</div>
+</div>
+
+{% include 'Template/partials/User.html' %}
+{% include 'Template/partials/Projects.html' %}
+{% endblock %}
+
+{% block JS %}
+<script>
+	$(document).ready(function(){
+		$("#id_IdUser").select2();
+		$("#id_IdProject").select2();
+		$('#RequestProject a').addClass('active')
+	});
+</script>
+{% endblock %}

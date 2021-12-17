@@ -1,0 +1,79 @@
+{% extends 'Template/base.html' %}
+
+
+{% block title %}{% block title-meta %}
+	لیست تسویه فاکتورها
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'inventory:SettlementArrived-Create' %}">تعریف تسویه فاکتور</a>
+{% endblock %}
+
+
+{% block main %}
+    {% if object_list %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>نوع</th>
+                <th>تاریخ</th>
+                <th>مبلغ</th>
+                <th>توضیحات</th>
+                <th>آدرس</th>
+                <th>تلفن</th>
+                <th>شماره سند</th>
+                <th>انبار</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in object_list %}
+                <tr>
+                    <td data-label="ردیف">{{item.Id}}</td>
+                    <td data-label="نوع">{{item.Type}}</td>
+                    <td data-label="تاریخ">{{item.jDate}}</td>
+                    <td data-label="مبلغ">{{item.Amount}}</td>
+                    <td data-label="توضیحات">{{item.Description|safe}}</td>
+                    <td data-label="آدرس">{{item.Address|safe}}</td>
+                    <td data-label="تلفن">{{item.Telephone}}</td>
+                    <td data-label="شماره سند">{{item.ReceiptNumber}}</td>
+                    <td data-label="انبار">{{item.IdStoreroom}}</td>
+                    <td data-label="عملیات">
+                        {% if user.is_superuser or user.is_storekeeper %}
+                        <a class="badge text-danger" href="{% url 'inventory:SettlementArrived-Delete' item.pk %}">حذف</a>
+                        <a class="badge text-succsess" href="{% url 'inventory:SettlementArrived-update' item.pk %}">ویرایش</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row pagination">
+        <span class="step-links">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeSA' page_obj.previous_page_number %}">
+                        قبلی
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeSA' page_obj.next_page_number %}">
+                        بعدی
+                    </a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست تسویه فاکتور خالی است
+            <br>
+            <a href="{% url 'inventory:SettlementArrived-Create' %}">
+                تعریف تسویه فاکتور
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}

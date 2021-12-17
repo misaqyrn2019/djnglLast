@@ -1,0 +1,211 @@
+<div class="col-sm-12 col-md-12 col-lg-12">
+    <div class="row">
+		<div class="col-sm-2 col-md-2 col-lg-2">
+			<a href="#" type="button" data-toggle="modal" data-target="#myModalProvince">
+				<img src = "/static/admin/img/icon-addlink.svg">
+			</a>
+		</div>
+        <div class="col-sm-10 col-md-10 col-lg-10">
+            <label>استان*</label>
+            <select id="SLCProvince" class="select form-control"></select>
+        </div>
+    </div>
+    <div class="row">
+		<div class="col-sm-2 col-md-2 col-lg-2">
+			<a href="#" type="button" data-toggle="modal" data-target="#myModalCity">
+				<img src = "/static/admin/img/icon-addlink.svg">
+			</a>
+		</div>
+        <div class="col-sm-10 col-md-10 col-lg-10">
+            <label>شهر*</label>
+            <select id="IdCity" name="IdCity" class="select form-control"></select>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				عنوان
+				<input type="text" id="TxtName" class="textinput textInput form-control" />
+				<br>
+				<input type="button" id="BtnSave" value="ثبت" data-dismiss="modal" class="btn btn-success" />
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="myModalProvince" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				نام استان
+				<input type="text" id="TxtNameProvince" class="textinput textInput form-control" />
+				<br>
+				<input type="button" id="BtnSaveProvince" value="ثبت" data-dismiss="modal" class="btn btn-success" />
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="myModalCity" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				نام شهر
+				<input type="text" id="TxtNameCity" class="textinput textInput form-control" />
+				<br>
+				<input type="button" id="BtnSaveCity" value="ثبت" data-dismiss="modal" class="btn btn-success" />
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<label style="opacity:0;" id="LblProvince">{{object.IdCity.IdProvince.Id}}</label>
+<label style="opacity:0;" id="LBlCity">{{object.IdCity.Id}}</label>
+
+<script>
+	$(document).ready(function(){
+        $("#IdCity").select2();
+		$("#SLCProvince").select2();
+		var LOC = location.href.toString().search("update")
+		var LblProvince = 0;
+		var LBlCity = 0;
+		if(LOC != -1)
+		{
+			var LblProvince = document.getElementById("LblProvince").innerHTML
+			var LBlCity = document.getElementById("LBlCity").innerHTML
+		}
+		function ChooseProvince()
+		{
+			var IdProvince = $('#SLCProvince').val()
+			ListCity(IdProvince)
+		}
+		function ListProvince()
+		{
+			$.ajax({
+				url: '/account/API/ApiListProvince',
+				type: 'GET',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				success: function (arg) {
+					$('#SLCProvince').empty()
+					for (let i = 0; i < arg.length; i++)
+					{
+						if(LOC != -1)
+						{
+							if(arg[i].Id == parseInt(LblProvince))
+								$('#SLCProvince').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+							else
+								$('#SLCProvince').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+						}
+						else
+							$('#SLCProvince').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+					}
+					if(location.href.toString().search("update")==-1)
+						ChooseCity(IdCity);
+				},
+				error:function(error){
+					alert("خطایی رخ داد!");
+				}
+			});
+		}
+		function ListCity(IdProvince)
+		{
+			$.ajax({
+				url: '/account/API/ApiCityList/' + IdProvince,
+				type: 'GET',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				success: function (arg) {
+					$('#IdCity').empty()
+					for (let i = 0; i < arg.length; i++)
+					{
+						if(LOC != -1)
+						{
+							if(arg[i].Id == parseInt(LBlCity))
+								$('#IdCity').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+							else
+								$('#IdCity').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+						}
+						else
+							$('#IdCity').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+					}
+				},
+				error:function(error){
+					alert("خطایی رخ داد!");
+				}
+			});
+		}
+		ListProvince();
+		ListCity(0);
+		$('#SLCProvince').change(function(){
+			ChooseProvince();
+		});
+
+		$('#BtnSaveProvince').click(function(){
+			var TxtName = $('#TxtNameProvince').val()
+			$.ajax({
+				url: '{% url 'account:ApiListProvince' %}',
+				type: 'POST',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				data:JSON.stringify({'Name': TxtName}),
+				success: function (arg) {
+					ListProvince();
+				},
+				error:function(error){
+					alert("نام استان ثبت نشد!");
+				}
+			});
+		});
+		$('#BtnSaveCity').click(function(){
+			var TxtName = $('#TxtNameCity').val()
+			var IdProvince = $('#SLCProvince').val()
+			$.ajax({
+				url: '{% url 'account:ApiCityList' %}',
+				type: 'POST',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				data:JSON.stringify({'Name': TxtName,'IdProvince':IdProvince}),
+				success: function (arg) {
+					ListCity(IdProvince);
+				},
+				error:function(error){
+					alert("نام استان ثبت نشد!");
+				}
+			});
+		});
+	});
+</script>

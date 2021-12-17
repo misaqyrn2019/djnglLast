@@ -1,0 +1,135 @@
+{% extends 'Template/base.html' %}
+
+{% block title %}{% block title-meta %}
+	وام های ثبت شده
+{% endblock %}{% endblock %}
+
+
+{% block Create %}
+    <a class="badge text-primary">لیست وام های ثبت شده</a>
+{% endblock %}
+
+{% block main %}
+    {% if object_list %}
+    <table id="TBLLoan" class="table table-striped display table-bordered tableResponse responsive" style="width:100%">
+        <thead>
+            <tr>
+                <th>عنوان</th>
+                <th>نوع وام</th>
+                <th>پرسنل</th>
+                <th>تاریخ شروع</th>
+                <th>تاریخ پایان</th>
+                <th>مبلغ کل</th>
+                <th>تعداد اقساط</th>
+                <th>مبلغ قسط</th>
+                <th>سود وام</th>
+                <th>قرعه کشی</th>
+                <th>تاییدیه</th>
+                <th>لغو درخواست</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in object_list %}
+            <tr>
+                <td data-label="عنوان">{{item.IdLoan.Title}}</td>
+                <td data-label="نوع وام">
+                    {% if item.IdLoan.status == 'S' %}
+                        <div>کوتاه مدت</div>
+                    {% elif item.IdLoan.status == 'L' %}
+                        <div>بلند مدت</div>
+                    {% elif item.IdLoan.status == 'm' %}
+                        <div>مساعده مالی</div>
+                    {% endif %}
+                </td>
+                <td data-label="پرسنل">{{item.IdUser}}</td>
+                <td data-label="تاریخ شروع">{{item.IdLoan.jStartDateTime}}</td>
+                <td data-label="تاریخ پایان">{{item.IdLoan.jEndDateTime}}</td>
+                <td data-label="مبلغ کل">{{item.IdLoan.HTotalAmount}} ریال</td>
+                <td data-label="تعداد اقساط">{{item.IdLoan.NumberInstallment}}</td>
+                <td data-label="مبلغ قسط">{{item.IdLoan.HInstallmentAmount}} ریال</td>
+                <td data-label="سود وام">{{item.IdLoan.LoanInterest}}</td>
+                <td data-label="تاییدیه">
+                    {% if item.statusConfirmation == 'Y' %}
+                        <span>تایید شده</span>
+                    {% elif item.statusConfirmation == 'N' %}
+                        <span>تایید نشده</span>
+                    {% endif %}
+                </td>
+                <td data-label="قرعه کشی">
+                    {% if item.statusLattery == 'Y' %}
+                        <span>قرعه کشی شده</span>
+                    {% elif item.statusLattery == 'N' %}
+                        <span>قرعه کشی نشده</span>
+                    {% endif %}
+                </td>
+                <td data-label="لغو">
+                    <a class="badge text-danger" href="{% url 'FacilitiesWelfare:Loan-DeleteR-User' item.pk %}">لغو درخواست</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tfoot>
+    </table>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست وام خالی است
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block JS %}
+<script>
+    $(document).ready(function(){
+        function fn(){
+            $("#A0").select2();
+            $("#A1").select2();
+            $("#A2").select2();
+            $("#A3").select2();
+            $("#A4").select2();
+            $("#A5").select2();
+            $("#A6").select2();
+            $("#A7").select2();
+            $("#A8").select2();
+            $("#A9").select2();
+            $("#A10").select2();
+        }
+        $('#TBLLoan').DataTable({
+            initComplete: function () {
+                this.api().columns([0,1,2,3,4,5,6,7,8,9,10]).every( function (ee) {
+                    var column = this;
+                    var select = $('<select style="width:100% !important" id="A'+ ee +'"><option value=""></option></select>')
+                        .appendTo( $(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+                            column
+                                .search(val ? '^'+val+'$' : '', true, false)
+                                .draw();
+                        });
+                    column.data().unique().sort().each( function ( d, j ) {
+                        select.append( '<option value="'+d+'">'+d+'</option>')
+                    });
+                    fn();
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

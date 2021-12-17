@@ -1,0 +1,80 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	ثبت درخواست وام
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">افزودن درخواست وام</h3>
+		</div>
+		<div class="card-body container">
+			{% for item in LoanDetail %}
+			<table class="table table-striped display table-bordered tableResponse responsive" style="width:100%">
+				<thead>
+					<th>شناسه وام</th>
+					<th>عنوان وام</th>
+					<th>نوع وام</th>
+					<th>مبلغ کل</th>
+					<th>تعداد اقساط</th>
+					<th>مبلغ قسط</th>
+					<th>سود وام</th>
+					<th>مهلت ثبت درخواست</th>
+				</thead>
+				<tbody>
+					<td>
+						<span id="Id">{{ item.Id }}</span>
+					</td>
+					<td>{{ item.Title }}</td>
+					<td>{{ item.status }}</td>
+					<td>{{ item.HTotalAmount }}</td>
+					<td>{{ item.NumberInstallment }}</td>
+					<td>{{ item.InstallmentAmount }}</td>
+					<td>{{ item.LoanInterest }}</td>
+					<td>{{ item.jEndDateTime }} - {{ item.EndDateTime|timeuntil }}</td>
+				</tbody>
+			</table>
+			{% endfor %}
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						<label for="id_status" class=" requiredField">
+							پرسنل <span class="asteriskField">*</span>
+						</label>
+						<a href="#" type="button" data-toggle="modal" data-target="#myModelPersonnel">
+							<img src = "/static/admin/img/icon-addlink.svg">
+						</a>
+						<select id="IdUser" name="IdUser" class="select form-control"></select>
+					</div>
+					<div style="display:none;" class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.IdLoan|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.statusLattery|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.statusConfirmation|as_crispy_field }}
+					</div>
+				</div>
+				<button class="btn btn-success">ثبت</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:RegisterLoan-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+</div>
+{% include 'Template/partials/User.html' %}
+{% endblock %}
+
+{% block JS%}
+<script>
+	$(document).ready(function(){
+		$('#RLoan a').addClass('active')
+		$('#id_IdLoan').val(parseInt($('#Id').text()))
+		$('#id_statusConfirmation').val('Y')
+	});
+</script>
+{% endblock %}
