@@ -1,0 +1,20 @@
+{% extends 'Template/base.html' %}
+
+{% block title %}{% block title-meta %}
+    در حال بستن پنجره
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <h1 class="badge text-primary">در حال بستن پنجره</h1>
+{% endblock %}
+
+{% block main %}
+{% endblock %}
+
+{% block JS %}
+    <script>
+        $(document).ready(function(){
+            parent.window.close();
+        });
+    </script>
+{% endblock %}

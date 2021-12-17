@@ -1,0 +1,79 @@
+{% extends 'Template/base.html' %}
+
+
+{% block title %}{% block title-meta %}
+	لیست حمل و نقل
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'inventory:Transportation-Create' %}">تعریف حمل و نقل</a>
+{% endblock %}
+
+
+{% block main %}
+    {% if object_list %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>راننده</th>
+                <th>فرستنده</th>
+                <th>گیرنده</th>
+                <th>شماره باربری</th>
+                <th>آدرس مبدا</th>
+                <th>تاریخ ثبت</th>
+                <th>کالا</th>
+                <th>توضیحات</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in object_list %}
+            <div class="row text-center">
+                <td data-label="ردیف">{{item.Id}}</td>
+                <td data-label="راننده">{{item.IdDrivers}}</td>
+                <td data-label="فرستنده">{{item.Sender}}</td>
+                <td data-label="گیرنده">{{item.Transferee}}</td>
+                <td data-label="شماره باربری">{{item.FreightNumber}}</td>
+                <td data-label="آدرس مبدا">{{item.SourceAddress}}</td>
+                <td data-label="تاریخ ثبت">{{item.jDate}}</td>
+                <td data-label="کالا">{{item.IdEntryCommodity}}</td>
+                <td data-label="توضیحات">{{item.Description|safe}}</td>
+                <td data-label="عملیات">
+                    {% if user.is_superuser or user.is_storekeeper %}
+                    <a class="badge text-danger" href="{% url 'inventory:Transportation-Delete' item.pk %}">حذف</a>
+                    <a class="badge text-succsess" href="{% url 'inventory:Transportation-update' item.pk %}">ویرایش</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="row pagination">
+        <span class="step-links">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeTP' page_obj.previous_page_number %}">
+                        قبلی
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeTP' page_obj.next_page_number %}">
+                        بعدی
+                    </a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست حمل و نقل خالی است
+            <br>
+            <a href="{% url 'inventory:Transportation-Create' %}">
+                تعریف حمل و نقل
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}

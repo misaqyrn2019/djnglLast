@@ -1,0 +1,68 @@
+{% extends 'Template/base.html' %}
+{% load humanize %}
+
+{% block title %}{% block title-meta %}
+ {{ECName}} کالا
+{% endblock %}{% endblock %}
+
+{% block Css %}
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css">
+    <style type="text/css">
+    *{
+        direction:rtl;
+    }
+    .SPNName{
+        color:rgb(71, 67, 67);
+        text-decoration: underline;
+    }
+    @media print{
+        button,h2,.main-footer{
+            display: none !important;
+        }
+    }
+    </style>
+{% endblock %}
+{% block JS %}
+    <!-- <script type="text/javascript">
+        window.onload = print();
+    </script> -->
+{% endblock %}
+{% block main %}
+{% if EntryCommodityPerStoreroom %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>نام کالا</th>
+                <th>تعداد</th>
+                <th>نام انبار</th>
+                <th>نام مشتری</th>
+                <th>تاریخ ورود</th>
+                <th>تاریخ انقضا</th>
+                <th>سریال</th>
+                <th>شماره فاکتور</th>
+                <th>توضیحات</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in EntryCommodityPerStoreroom %}
+            <tr>
+                <td data-label="ردیف">{{item.Id}}</td>
+                <td data-label="نام کالا">{{item.IdCommodity}}</td>
+                <td data-label="تعداد">{{item.Count}}</td>
+                <td data-label="نام انبار">{{item.IdStoreroom}}</td>
+                <td data-label="نام مشتری">{{item.IdCustomer}}</td>
+                <td data-label="تاریخ ورود">{{item.jDateEntry}}</td>
+                <td data-label="تاریخ انقضا">{{item.jDateExpired}}</td>
+                <td data-label="سریال">{{item.Serial}}</td>
+                <td data-label="شماره فاکتور">{{item.InvoiceNumber}}</td>
+                <td data-label="توضیحات">{{item.Description|safe}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <h2 style="text-align: center;">هنوز کالایی برای این انبار وارد نشده است</h2>
+{% endif %}
+<button onclick="print()" class="btn btn-info">پرینت گزارش</button>
+{% endblock %}

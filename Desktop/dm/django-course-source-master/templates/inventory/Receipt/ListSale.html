@@ -1,0 +1,68 @@
+{% extends 'Template/base.html' %}
+{% load humanize %}
+
+{% block title %}{% block title-meta %}
+	لیست فاکتور فروش
+{% endblock %}{% endblock %}
+
+{% block Css %}
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css">
+    <style type="text/css">
+    *{
+        direction:rtl;
+    }
+    .SPNName{
+        color:rgb(71, 67, 67);
+        text-decoration: underline;
+    }
+    @media print{
+        button,h2,.main-footer{
+            display: none !important;
+        }
+    }
+    </style>
+{% endblock %}
+{% block JS %}
+    <!-- <script type="text/javascript">
+        window.onload = print();
+    </script> -->
+{% endblock %}
+{% block main %}
+{% if ReceiptSale %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>ردیف</th>
+                <th>کالا</th>
+                <th>واحد سنجش</th>
+                <th>تعداد</th>
+                <th>مبلغ</th>
+                <th>تخفیف</th>
+                <th>مالیات</th>
+                <th>تاریخ فاکتور</th>
+                <th>مشتری</th>
+                <th>انبار</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in ReceiptSale %}
+                <tr>
+                    <td data-label="ردیف">{{item.Id}}</td>
+                    <td data-label="کالا">{{item.IdCommodity}}</td>
+                    <td data-label="واحد سنجش">{{item.IdUnitofMeasurement}}</td>
+                    <td data-label="تعداد">{{item.Count}}</td>
+                    <td data-label="مبلغ">{{item.Amount}}</td>
+                    <td data-label="تخفیف">{{item.Discount}}</td>
+                    <td data-label="مالیات">{{item.Taxation}}</td>
+                    <td data-label="تاریخ فاکتور">{{item.jDate}}</td>
+                    <td data-label="مشتری">{{item.IdCustomer}}</td>
+                    <td data-label="انبار">{{item.IdStoreroom}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+</table>
+{% else %}
+    <h2 style="text-align: center;">فاکتور فروش خالی است</h2s>
+{% endif %}
+<button onclick="print()" class="btn btn-info">پرینت گزارش</button>
+{% endblock %}

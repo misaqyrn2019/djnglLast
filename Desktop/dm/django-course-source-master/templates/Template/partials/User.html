@@ -1,0 +1,339 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="modal fade" id="myModelPersonnel" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+                <label for="Id_DateMarried" class=" requiredField">
+                    شماره پرسنلی<span class="asteriskField">*</span>
+                </label>
+                <input type="number" class="textinput textInput form-control" id="NumberPersonnel"/>
+                <label for="Id_DateMarried" class=" requiredField">
+                    نام<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="Name"/>
+                <label for="Id_DateMarried" class=" requiredField">
+                    نام خانوادگی<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="Family"/>
+                <section>
+                    <label for="Id_DateBirthDay" class=" requiredField">
+                        تاریخ تولد<span class="asteriskField">*</span>
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text cursor-pointer" id="date1"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input type="text" disabled id="inputDate1-text" class="form-control" placeholder="شمسی">
+                        <input type="hidden" id="Id_DateBirthDay" name="DateBirthDay" class="form-control" placeholder="میلادی" required>
+                    </div>
+                </section>
+                <label for="Id_DateMarried" class=" requiredField">
+                    آدرس<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="Address" />
+                <label for="Id_DateMarried" class=" requiredField">
+                    کد ملی<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" maxlength="10" id="NationalCode" />
+                <label for="Id_DateMarried" class=" requiredField">
+                    شماره شناسنامه<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="IdNumber"/>
+                <label for="Id_DateMarried" class=" requiredField">
+                    شماره منزل<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="HomePhoneNumber" maxlength="10"/>
+                <label for="Id_DateMarried" class=" requiredField">
+                    شماره همراه<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="MobileNumber" maxlength="10" />
+                <label for="Id_DateMarried" class=" requiredField">
+                    شماره اظطراری<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="EmergencyNumber" maxlength="10" />
+                <label for="Id_DateMarried" class=" requiredField">
+                    ایمیل<span class="asteriskField">*</span>
+                </label>
+                <input type="email" class="textinput textInput form-control" id="Email" />
+                <label for="Id_DateMarried" class=" requiredField">
+                    نام کاربری<span class="asteriskField">*</span>
+                </label>
+                <input type="text" class="textinput textInput form-control" id="UserName" />
+                <label for="Id_DateMarried" class=" requiredField">
+                    رمز عبور<span class="asteriskField">*</span>
+                </label>
+                <input type="password" class="textinput textInput form-control" id="Password" />
+                <section>
+                    <label for="Id_DateMarried" class=" requiredField">
+                        تاریخ ازدواج<span class="asteriskField">*</span>
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text cursor-pointer" id="date2"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        <input type="text" disabled id="inputDate2-text" class="form-control" placeholder="شمسی" required>
+                        <input type="hidden" id="Id_DateMarried" name="DateMarried" class="form-control" placeholder="میلادی">
+                    </div>
+                </section>
+                {% include 'Template/partials/CityProvince.html' %}
+                <label for="Id_DateMarried" class=" requiredField">
+                    جنسیت<span class="asteriskField">*</span>
+                </label>
+                <select id="Gender" class="select form-control">
+                    <option value="M" selected>مذکر</option>
+                    <option value="F">مونث</option>
+                </select>
+                <label for="Id_DateMarried" class=" requiredField">
+                    وضعیت تاهل<span class="asteriskField">*</span>
+                </label>
+                <select id="MaritalStatus" class="select form-control">
+                    <option value="Y" selected>مجرد</option>
+                    <option value="N">متاهل</option>
+                </select>
+                <label for="Id_DateMarried" class=" requiredField">
+                    <span style="color:rgb(148, 2, 92);">(فعال/غیرفعال)</span>
+                    وضعیت پرسنل<span class="asteriskField">*</span>
+                </label>
+                <input type="checkbox" id="IsActive" checked/>
+                <br>
+                <label for="Id_DateMarried" class=" requiredField">
+                     رشته تحصیلی<span class="asteriskField">*</span>
+                </label>
+                <section>
+                    <select id="IdFieldofStudy" name="IdFieldofStudy" class="select form-control"></select>
+                </section>
+                <label for="Id_DateMarried" class=" requiredField">
+                    مقطع تحصیلی<span class="asteriskField">*</span>
+                </label>
+                <section>
+                    <select id="IdGradeofStudy" name="IdGradeofStudy" class="select form-control">
+                        <option value="SI">سیکل</option>
+                        <option value="DI">دیپلم</option>
+                        <option value="KA">کاردانی</option>
+                        <option value="KAR" selected>کارشناسی</option>
+                        <option value="ARS">کارشناسی ارشد</option>
+                        <option value="DR">دکتری</option>
+                        <option value="FDR">فوق دکتری</option>
+                        <option value="PE">پزشک</option>
+                        <option value="PEM">پزشک متخصص</option>
+                    </select>
+                </section>
+                <label for="Id_DateMarried" class=" requiredField">
+                    سمت سازمانی<span class="asteriskField">*</span>
+                </label>
+                <section>
+                    <select id="IdPost" name="IdPost" class="select form-control"></select>
+                </section>
+                <label for="Id_DateMarried" class=" requiredField">
+                    گروه سازمانی<span class="asteriskField">*</span>
+                </label>
+                <section>
+                    <select id="IdGroup" name="IdGroup" class="select form-control"></select>
+                </section>
+                <input type="button" class="btn btn-success" id="SavePersonnel" value="ثبت"/>
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+			</div>
+		</div>
+	</div>
+</div>
+<label style="opacity: 0;" id="LblUser">{{object.IdUser.Id}}</label>
+<script>
+	$('#date1').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate1-text',
+		targetDateSelector: '#Id_DateBirthDay',
+		enableTimePicker: false,
+        dateFormat: 'yyyy-MM-dd',
+      	textFormat: 'yyyy-MM-dd',
+	});
+	$('#date2').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate2-text',
+		targetDateSelector: '#Id_DateMarried',
+		enableTimePicker: false,
+        dateFormat: 'yyyy-MM-dd',
+      	textFormat: 'yyyy-MM-dd',
+	});
+    function FieldofStudy(){
+        $.ajax({
+            url: '{% url 'HR:APIFieldofStudy' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                for (let i = 0; i < arg.length; i++)
+                    $('#IdFieldofStudy').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                debugger;
+                alert("خطایی رخ داد!");
+            }
+        });
+    }
+    function Post(){
+        $.ajax({
+            url: '{% url 'HR:APIPost' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                for (let i = 0; i < arg.length; i++)
+                    $('#IdPost').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                debugger;
+                alert("خطایی رخ داد!");
+            }
+        });
+    }
+    function Group()
+    {
+        $.ajax({
+            url: '{% url 'HR:APIGroup' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                for (let i = 0; i < arg.length; i++)
+                    $('#IdGroup').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                debugger;
+                alert("خطایی رخ داد!");
+            }
+        });
+    }
+    function Personnel()
+    {
+        $.ajax({
+            url: '{% url 'HR:APIPersonnel' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                $('#IdUser').empty()
+                debugger;
+                for (let i = 0; i < arg.length; i++)
+                {
+                    if(location.href.toString().search("update")==-1)
+                    {
+                        if (i == arg.length - 1)
+                            $('#IdUser').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Id + " " + arg[i].Name + " " + arg[i].Family + "</option>")
+                        else
+                            $('#IdUser').append("<option value='" + arg[i].Id + "'>" + arg[i].Id + " " + arg[i].Name + " " + arg[i].Family + "</option>")
+                    }
+                    else
+                    {
+                        var LblUser = document.getElementById("LblUser").innerHTML
+                        IdUser = parseInt(LblUser)
+                        if (arg[i].Id == IdUser)
+                            $('#IdUser').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Id + " " + arg[i].Name + " " + arg[i].Family + "</option>")
+                        else
+                            $('#IdUser').append("<option value='" + arg[i].Id + "'>" + arg[i].Id + " " + arg[i].Name + " " + arg[i].Family + "</option>")
+                    }
+                }
+            },
+            error:function(error){
+                alert("خطایی رخ داد!");
+            }
+        });
+    }
+    $(document).ready(function(){
+        $("#IdUser").select2();
+        $("#IdGroup").select2();
+        $("#IdPost").select2();
+        $("#IdGradeofStudy").select2();
+        $("#IdFieldofStudy").select2();
+        Post();
+        Group();
+        FieldofStudy();
+        Personnel();
+        $('#SavePersonnel').click(function(){
+            debugger
+            var NumberPersonnel = $('#NumberPersonnel').val()
+            var Name = $('#Name').val()
+            var Family = $('#Family').val()
+            var Id_DateBirthDay = $('#Id_DateBirthDay').val()
+            var Address = $('#Address').val()
+            var NationalCode = $('#NationalCode').val()
+            var HomePhoneNumber = $('#HomePhoneNumber').val()
+            var MobileNumber = $('#MobileNumber').val()
+            var EmergencyNumber = $('#EmergencyNumber').val()
+            var Email = $('#Email').val()
+            var UserName = $('#UserName').val()
+            var Password = $('#Password').val()
+            var Id_DateMarried = $('#Id_DateMarried').val()
+            var Gender = $('#Gender').val()
+            var MaritalStatus = $('#MaritalStatus').val()
+            var IsActive = $('#IsActive').val()
+            if(IsActive=="on" || IsActive == "true" || IsActive == true)
+                IsActive = "Y"
+            else
+                IsActive = "N"
+            var IdFieldofStudy = $('#IdFieldofStudy').val()
+            var IdGradeofStudy = $('#IdGradeofStudy').val()
+            var IdPost = $('#IdPost').val()
+            var IdGroup = $('#IdGroup').val()
+            var IdProvince = $('#SLCProvince').val()
+            var IdCity = $('#IdCity').val()
+            var IdNumber = $('#IdNumber').val()
+			$.ajax({
+				
+				url: '{% url 'HR:APIPersonnel' %}',
+				type: 'POST',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				data:JSON.stringify({'NumberPersonnel': NumberPersonnel,
+                                     'Name':Name,
+                                     'Family':Family,
+                                     'DateBirthDay':Id_DateBirthDay,
+                                     'Address':Address,
+                                     'NationalCode':NationalCode,
+                                     'IdNumber':IdNumber,
+                                     'HomePhoneNumber':HomePhoneNumber,
+                                     'MobileNumber':MobileNumber,
+                                     'EmergencyNumber':EmergencyNumber,
+                                     'Email':Email,
+                                     'UserName':UserName,
+                                     'Password':Password,
+                                     'DateMarried':Id_DateMarried,
+                                     'Gender':Gender,
+                                     'MaritalStatus':MaritalStatus,
+                                     'IsActive':IsActive,
+                                     'IdProvince':IdProvince,
+                                     'IdGradeofStudy':IdGradeofStudy,
+                                     'IdCity':IdCity,
+                                     'IdFieldofStudy':IdFieldofStudy,
+                                     'IdPost':IdPost,
+                                     'IdGroup':IdGroup,
+                                }),
+				success: function (arg) {
+					Personnel();
+				},
+				error:function(error){
+                    alert("خطایی رخ داده است!")
+				}
+			});
+        });
+    });
+</script>

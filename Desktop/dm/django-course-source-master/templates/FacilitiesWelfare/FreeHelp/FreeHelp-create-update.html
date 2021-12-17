@@ -1,0 +1,84 @@
+{% extends 'Template/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	ایجاد کمک بلاعوض
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">افزودن کمک بلاعوض</h3>
+		</div>
+		<div class="card-body container">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.Title|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.TypeAssistance|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<label for="id_status" class=" requiredField">
+							پرسنل <span class="asteriskField">*</span>
+						</label>
+						<a href="#" type="button" data-toggle="modal" data-target="#myModelPersonnel">
+							<img src = "/static/admin/img/icon-addlink.svg">
+						</a>
+						<select id="IdUser" name="IdUser" class="select form-control"></select>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.Price|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<label for="id_DateRegister" class=" requiredField">
+							تاریخ ثبت<span class="asteriskField">*</span>
+						</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text cursor-pointer" id="date1">
+									<i class="fa fa-calendar"></i>
+								</span>
+							</div>
+							<input type="text" disabled id="inputDate1-text" class="form-control" placeholder="فارسی">
+							<input type="hidden" id="id_DateRegister" value="" name="DateRegister" class="form-control" placeholder="انگلیسی">
+						</div>
+					</div>
+					<div class="col-12">
+						{{ form.Description|as_crispy_field }}
+					</div>
+				</div>
+				<button id="BtnSubmit" class="btn btn-success">ثبت</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:FreeHelp-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+</div>
+<span style="opacity:0;" id="DateReadP">{{object.jDateRegister}}</span>
+<span style="opacity:0;" id="DateReadM">{{object.MDateRegister}}</span>
+
+{% include 'Template/partials/User.html' %}
+
+<script>
+	$('#date1').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate1-text',
+		targetDateSelector: '#id_DateRegister',
+		enableTimePicker: false,
+		dateFormat: 'yyyy-MM-dd',
+      	textFormat: 'yyyy-MM-dd',
+	});
+	$(document).ready(function(){
+		var DateReadP = document.getElementById('DateReadP').innerText
+		var DateReadM = document.getElementById('DateReadM').innerText
+		
+		document.getElementById("inputDate1-text").value = DateReadP
+		document.getElementById("id_DateRegister").value = DateReadM
+		
+		$('#FreeHelp a').addClass('active')
+	});
+</script>
+{% endblock %}

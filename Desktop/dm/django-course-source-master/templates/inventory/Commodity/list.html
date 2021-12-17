@@ -1,0 +1,87 @@
+{% extends 'Template/base.html' %}
+{% load humanize %}
+
+{% block title %}{% block title-meta %}
+	لیست جنس/کالا
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'inventory:Commodity-Create' %}">تعریف جنس/کالا</a>
+{% endblock %}
+
+{% block main %}
+    <p style="text-align: center;">
+        <a href="{% url 'inventory:CommodityAll-Report' %}" target="_blank">
+            لیست همه ی کالاهای موجود
+        </a>
+    </p>
+    {% if object_list %}
+    <table class="tableResponse">
+        <thead>
+            <tr>
+                <th>شناسه محصول</th>
+                <th>نام جنس/کالا</th>
+                <th>تاریخ ورود کالا</th>
+                <th>نام انبار</th>
+                <th>آدرس انبار</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in object_list %}
+            <tr>
+                <td data-label="شناسه محصول">
+                    <a href="{% url 'inventory:Commodity-Report' item.Id %}" target="_blank">
+                        {{item.Id}}
+                    </a>
+                </td>
+                <td data-label="نام جنس/کالا">
+                    <a href="{% url 'inventory:Commodity-Report' item.Id %}" target="_blank">
+                        {{item.Name}}
+                    </a>
+                </td>
+                <td data-label="تاریخ ورود کالا">{{item.EntryDateTime|naturaltime}}</td>
+                <td data-label="نام انبار">
+                    <a href="{% url 'inventory:StoreroomListReport' IdStoreroom=item.IdStoreroom.Id %}" target="_blank">
+                        {{item.IdStoreroom}}
+                    </a>
+                </td>
+                <td data-label="آدرس انبار">{{item.AddressCommodity|safe}}</td>
+                <td data-label="عملیات">
+                    {% if user.is_superuser or user.is_storekeeper %}
+                    <a class="badge text-danger" href="{% url 'inventory:Commodity-Delete' item.pk %}">حذف</a>
+                    <a class="badge text-succsess" href="{% url 'inventory:Commodity-update' item.pk %}">ویرایش</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="row pagination">
+        <span class="step-links">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeCO' page_obj.previous_page_number %}">
+                        قبلی
+                    </a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a class="btn btn-primary" href="{% url 'inventory:homeCO' page_obj.next_page_number %}">
+                        بعدی
+                    </a>
+                {% endif %}
+            {% endif %}
+        </span>
+    </div>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست جنس/کالا خالی است
+            <br>
+            <a href="{% url 'inventory:Commodity-Create' %}">
+                تعریف جنس/کالا
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{% block title-meta %}
+	تعریف پاداش
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">افزودن پاداش</h3>
+		</div>
+		<div class="card-body">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				{% include 'Template/partials/PersonnelGroup.html' %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.Title|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						<label for="Id_AssignmentDate" class=" requiredField">
+							تاریخ واگذاری<span class="asteriskField">*</span>
+						</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text cursor-pointer" id="date2">
+									<i class="fa fa-calendar"></i>
+								</span>
+							</div>
+							<input type="text" disabled id="inputDate2-text" class="form-control" placeholder="فارسی">
+							<input type="hidden" id="Id_AssignmentDate" name="AssignmentDate" class="form-control" placeholder="انگلیسی">
+						</div>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.Price|as_crispy_field }}
+					</div>
+					<div class="col-12">
+						{{ form.Description|as_crispy_field }}
+					</div>
+				</div>
+				<button id="BtnSubmit" class="btn btn-success">ثبت</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:Reward-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+</div>
+<span style="opacity:0;" id="DateReadM">{{object.MAssignmentDate}}</span>
+<span style="opacity:0;" id="DateReadP">{{object.jAssignmentDate}}</span>
+{% include 'Template/partials/User.html' %}
+<script type="text/javascript">
+	function FnChange(){
+		debugger;
+		var SLCUser = document.getElementById("CHKTF").checked
+		if(SLCUser == true)
+		{
+			$('#GroupSelect').show(1000)
+			$('#OneSelct').hide(1000);
+		}
+		else if(SLCUser == false)
+		{
+			$('#GroupSelect').hide(1000)
+			$('#OneSelct').show(1000);
+		}
+	}
+	$(document).ready(function(){
+		$('#GroupSelect').hide()
+		$('#OneSelct').show();
+		$('#BtnSubmit').click(function(){
+			var ListUser = "";
+			$('#UserPersonnel option:selected').each(function(){
+				ListUser += this.value + ",";
+			});
+			ListUser = ListUser.substring(0,ListUser.length-1)
+			$('#Personnels').val(ListUser)
+		});
+
+		var DateReadP = document.getElementById('DateReadP').innerText
+		var DateReadM = document.getElementById('DateReadM').innerText
+		
+		document.getElementById("inputDate2-text").value = DateReadP
+		document.getElementById("Id_AssignmentDate").value = DateReadM
+		
+		FNReadGroup();
+		FNReadPersonnel();
+
+		if (location.href.toString().search('update') != -1)
+			$('#SeC').css('display','none');
+	});
+	function FNReadPersonnel(){
+		debugger;
+		$('#UserPersonnel').empty()
+		var IdGroup = 1
+		IdGroup = $('#IdGroup').val()
+		if(IdGroup == undefined)
+			IdGroup = 1
+        $.ajax({
+            url: '/HR/API/APIPersonnelWithFilterGroup/' + IdGroup ,
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+			data:JSON.stringify({'IdGroup': IdGroup}),
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                for (let i = 0; i < arg.length; i++)
+					$('#UserPersonnel').append("<option value='" + arg[i].Id + "'>" + arg[i].Id + " " + arg[i].Name + " " + arg[i].Family + "</option>")
+            },
+            error:function(error){
+                alert("خطایی رخ داد!");
+            }
+        });
+	}
+	function FNReadGroup()
+	{
+		$('#IdGroup').empty()
+        $.ajax({
+            url: '{% url 'HR:APIGroup' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+				$('#IdGroup').empty()
+                for (let i = 0; i < arg.length; i++)
+					$('#IdGroup').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                alert("خطایی رخ داد!");
+            }
+        });
+	}
+	$('#date2').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate2-text',
+		targetDateSelector: '#Id_AssignmentDate',
+		enableTimePicker: false,
+		dateFormat: 'yyyy-MM-dd',
+    	textFormat: 'yyyy-MM-dd',
+	});
+	$('#Reward a').addClass('active')
+</script>
+{% endblock %}

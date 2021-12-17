@@ -1,0 +1,513 @@
+{% extends 'Template/base.html' %}
+{% load static %}
+
+{% block title %}{% block title-meta %}
+	گزارش تسهیلات و خدمات
+{% endblock %}{% endblock %}
+
+{% block Create %}
+{% endblock %}
+
+{% block main %}
+<style type="text/css">
+    .ThFirst{
+        text-align:center !important;
+    }
+    @media print{
+        .btn,form,.main-footer,footer,.main-sidebar,aside,hr{
+            display:none;
+        }
+        .row{
+            width:100% !important;
+        }
+        .table{
+            width:100% !important;
+        }
+        body{
+            width:100% !important;
+        }
+        .content-wrapper{
+            margin-right: 0 !important;
+        }
+    }
+</style>
+<form method="post">{% csrf_token %}
+    <div class="row">
+        <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                <label for="Id_AssignmentDate" class=" requiredField">
+                    تاریخ شروع<span class="asteriskField">*</span>
+                </label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date1">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" disabled id="inputDate1-text" class="form-control" />
+                    <input type="hidden" id="DateStart" name="DateStart" class="form-control" />
+                </div>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+                <label for="Id_AssignmentDate" class=" requiredField">
+                    تاریخ پایان<span class="asteriskField">*</span>
+                </label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text cursor-pointer" id="date2">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                    </div>
+                    <input type="text" disabled id="inputDate2-text" class="form-control" />
+                    <input type="hidden" id="DateEnd" name="DateEnd" class="form-control" />
+                </div>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-lg-4">
+            <label for="IdUser" class=" requiredField">
+                پرسنل<span class="asteriskField">*</span>
+            </label>
+            <div class="input-group">
+                <select id="SelectPersonnel" Name="IdUser" class="select form-control">
+                    {% for item in Personnel %}
+                        <option value='{{item.Id}}'>{{item}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 col-sm-10 col-md-10 col-lg-10">
+        </div>
+        <div class="col-2 col-sm-2 col-md-2 col-lg-2">
+            <input type="button" id="BtnSendData" class="btn btn-primary" value="نمایش گزارش" />
+        </div>
+    </div>
+</form>
+
+<hr />
+
+{% if FreeHelp %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">کمک بلاعوض</th>
+        </tr>
+        <tr>
+            <th>عنوان</th>
+            <th>نوع کمک</th>
+            <th>تاریخ ثبت</th>
+            <th>مبلغ</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in FreeHelp %}
+        <tr>
+            <td>{{item.Title}}</td>
+            <td>
+                {% if item.TypeAssistance == 'MA' %}
+                    <span>ازدواج</span>
+                {% elif item.TypeAssistance == 'BG' %}
+                    <span>هدیه تولد</span>
+                {% elif item.TypeAssistance == 'NC' %}
+                    <span>فرزند جدید</span>
+                {% elif item.TypeAssistance == 'AN' %}
+                    <span>غیره</span>
+                {% endif %}
+            </td>
+            <td>{{item.jDateRegister}}</td>
+            <td>{{item.Price}}</td>
+            <td>{{item.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if Reward %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="5">پاداش</th>
+        </tr>
+        <tr>
+            <th>عنوان پاداش</th>
+            <th>تاریخ واگزاری</th>
+            <th>مبلغ پاداش</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in Reward %}
+        <tr>
+            <td>{{item.Title}}</td>
+            <td>{{item.jAssignmentDate}}</td>
+            <td>{{item.Price}}</td>
+            <td>{{item.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if SeeAndVisit %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">دید و بازدید از بیماران</th>
+        </tr>
+        <tr>
+            <th>نسبت</th>
+            <th>نام بیمار</th>
+            <th>نام خانوادگی بیمار</th>
+            <th>زمان ثبت</th>
+            <th>زمان عیادت</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in SeeAndVisit %}
+        <tr>
+            <td>
+                {% if item.ConsumerItems == 'F' %}
+                    <span>پدر</span>
+                {% elif item.ConsumerItems == 'M' %}
+                    <span>مادر</span>
+                {% elif item.ConsumerItems == 'P' %}
+                    <span>پدربزرگ</span>
+                {% elif item.ConsumerItems == 'Q' %}
+                    <span>مادربزرگ</span>
+                {% elif item.ConsumerItems == 'B' %}
+                    <span>برادر</span>
+                {% elif item.ConsumerItems == 'S' %}
+                    <span>خواهر</span>
+                {% elif item.ConsumerItems == 'D' %}
+                    <span>دایی</span>
+                {% elif item.ConsumerItems == 'A' %}
+                    <span>عمو</span>
+                {% elif item.ConsumerItems == 'K' %}
+                    <span>خاله</span>
+                {% elif item.ConsumerItems == 'E' %}
+                    <span>عمه</span>
+                {% endif %}
+            </td>
+            <td>{{item.Name}}</td>
+            <td>{{item.Family}}</td>
+            <td>{{item.jDateTimeRegister}}</td>
+            <td>{{item.jDateTimeVisit}}</td>
+            <td>{{item.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if Travels %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">مسافرت ها</th>
+        </tr>
+        <tr>
+            <th>شهر</th>
+            <th>تاریخ شروع</th>
+            <th>تاریخ پایان</th>
+            <th>نوع سفر</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in Travels %}
+        <tr>
+            <td>{{item.IdCity}}</td>
+            <td>{{item.jStartDateTime}}</td>
+            <td>{{item.jEndDateTime}}</td>
+            <td>{{item.status}}</td>
+            <td>{{item.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if RegisterLoan %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">وام ها</th>
+        </tr>
+        <tr>
+            <th>عنوان وام</th>
+            <th>تاریخ ثبت درخواست</th>
+            <th>نتیجه قرعه کشی</th>
+            <th>تاییدیه پرداخت</th>
+            <th>مبلغ وام</th>
+            <th>تعداد اقساط</th>
+            <th>مبلغ قسط</th>
+            <th>سود وام</th>
+            <th>نوع وام</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in RegisterLoan %}
+        <tr>
+            <td>{{item.IdLoan}}</td>
+            <td>{{item.jRegisterDateTime}}</td>
+            <td>
+                {% if item.statusLattery == "Y" %}
+                    <span>برنده شده</span>
+                {% elif item.statusLattery == "N" %}
+                    <span>برنده نشده</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if item.statusConfirmation == "Y" %}
+                    <span>تایید شده</span>
+                {% elif item.statusConfirmation == "N" %}
+                    <span>تایید نشده</span>
+                {% endif %}
+            </td>
+            <td>{{item.IdLoan.TotalAmount}}</td>
+            <td>{{item.IdLoan.NumberInstallment}}</td>
+            <td>{{item.IdLoan.InstallmentAmount}}</td>
+            <td>{{item.IdLoan.LoanInterest}}</td>
+            <td>
+                {% if item.IdLoan.status == "S" %}
+                    <span>وام کوتاه مدت</span>
+                {% elif item.IdLoan.status == "L" %}
+                    <span>وام بلند مدت</span>
+                {% elif item.IdLoan.status == "m" %}
+                    <span>مساعده مالی</span>
+                {% endif %}
+            </td>
+            <td>{{item.IdLoan.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if RegisterAssistance %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">کمک ها</th>
+        </tr>
+        <tr>
+            <th>عنوان</th>
+            <th>تاریخ ثبت</th>
+            <th>نوع</th>
+            <th>نوع کمک</th>
+            <th>آیتم</th>
+            <th>نوع هدیه</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in RegisterAssistance %}
+        <tr>
+            <td>{{item.IdAssistance.Title}}</td>
+            <td>{{item.jDateTimeRegister}}</td>
+            <td>
+                {% if item.IdAssistance.ConsumerType == "CA" %}
+                <span>کمک معیشتی</span>
+                {% elif item.IdAssistance.ConsumerType == "CI" %}
+                <span>اقلام مصرفی</span>
+                {% elif item.IdAssistance.ConsumerType == "FH" %}
+                <span>کمک بلاعوض</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if item.IdAssistance.TypeAssistance == "PU" %}
+                <span>همگانی</span>
+                {% elif item.IdAssistance.TypeAssistance == "PR" %}
+                <span>خاص</span>
+                {% elif item.IdAssistance.TypeAssistance == "N" %}
+                <span>بدون انتخاب</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if item.IdAssistance.TypeItems == "Fr" %}
+                <span>رایگان</span>
+                {% elif item.IdAssistance.TypeItems == "Ca" %}
+                <span>نقدی</span>
+                {% elif item.IdAssistance.TypeItems == "N" %}
+                <span>بدون انتخاب</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if item.IdAssistance.FreeHelp == "Ma" %}
+                <span>ازدواج</span>
+                {% elif item.IdAssistance.FreeHelp == "BG" %}
+                <span>هدیه تولد</span>
+                {% elif item.IdAssistance.FreeHelp == "NC" %}
+                <span>فرزند جدید</span>
+                {% elif item.IdAssistance.FreeHelp == "N" %}
+                <span>بدون انتخاب</span>
+                {% endif %}
+            </td>
+            <td>{{item.IdAssistance.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if CashAssistance %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">کمک معیشتی نقدی</th>
+        </tr>
+        <tr>
+            <th>عنوان</th>
+            <th>نوع کمک</th>
+            <th>مبلغ</th>
+            <th>تاریخ ثبت</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in CashAssistance %}
+        <tr>
+            <td>{{item.Title}}</td>
+            <td>
+                {% if item.TypeAssistance == "PU" %}
+                <span>همگانی</span>
+                {% elif item.TypeAssistance == "PR" %}
+                <span>خاص</span>
+                {% endif %}
+            </td>
+            <td>{{item.HPrice}} ریال </td>
+            <td>{{item.jDateRegister}}</td>
+            <td>{{item.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if ConsumerItemsRegister %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">اقلام مصرفی درخواست شده</th>
+        </tr>
+        <tr>
+            <th>عنوان</th>
+            <th>تاریخ درخواست</th>
+            <th>نوع کمک</th>
+            <th>اقلام</th>
+            <th>مبلغ</th>
+            <th>تحویل شده/نشده</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in ConsumerItemsRegister %}
+        <tr>
+            <td>{{item.IdConsumerItems.Title}}</td>
+            <td>{{item.jDateRegister}}</td>
+            <td>
+                {% if item.IdConsumerItems.TypeAssistance == "F" %}
+                <span>رایگان</span>
+                {% elif item.IdConsumerItems.TypeAssistance == "C" %}
+                <span>نقدی</span>
+                {% endif %}
+            </td>
+            <td>{{item.IdConsumerItems.Items}}</td>
+            <td>{{item.IdConsumerItems.Price}}</td>
+            <td>
+                {% if item.IsReceived == "Y" %}
+                <span>تحویل شده</span>
+                {% elif item.IsReceived == "N" %}
+                <span>تحویل نشده</span>
+                {% endif %}
+            </td>
+            <td>{{item.IdConsumerItems.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if RegisterProject %}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th class="ThFirst" colspan="6">پروژه ها</th>
+        </tr>
+        <tr>
+            <th>عنوان پروژه</th>
+            <th>تاریخ ثبت</th>
+            <th>نوع پروژه</th>
+            <th>شهر</th>
+            <th>آدرس</th>
+            <th>توضیحات</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in RegisterProject %}
+        <tr>
+            <td>{{item.IdProject.Name}}</td>
+            <td>{{item.jRegisterDateTime}}</td>
+            <td>{{item.IdProject.IdTypeProject}}</td>
+            <td>{{item.IdProject.IdCity}}</td>
+            <td>{{item.IdProject.Address}}</td>
+            <td>{{item.IdProject.Description}}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<div class="row">
+    <div class="col-10 col-sm-10 col-md-10 col-lg-10">
+    </div>
+    <div class="col-2 col-sm-2 col-md-2 col-lg-2">
+        <button type="button" class="btn btn-success" onclick="print()">
+            <i class="fa fa-print"></i> چاپ گزارش
+        </button>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $("#SelectPersonnel").select2();
+    });
+	$('#date1').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate1-text',
+		targetDateSelector: '#DateStart',
+		enableTimePicker: false,
+		dateFormat: 'yyyy-MM-dd',
+    	textFormat: 'yyyy-MM-dd',
+	});
+	$('#date2').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate2-text',
+		targetDateSelector: '#DateEnd',
+		enableTimePicker: false,
+		dateFormat: 'yyyy-MM-dd',
+    	textFormat: 'yyyy-MM-dd',
+	});
+    $('#BtnSendData').click(function(){
+        debugger;
+        var DateStart = $('#DateStart').val()
+        var DateEnd = $('#DateEnd').val()
+        var IdUser = $('#SelectPersonnel').val()
+        if(DateStart.length==0)
+        {
+            alert("لطفا تاریخ شروع گزارش را وارد نمائید!")
+            return;
+        }
+        if(DateEnd.length==0)
+        {
+            alert("لطفا تاریخ پایان گزارش را وارد نمائید!")
+            return;
+        }
+        var PN = window.location;
+        PN = PN.toString().substr(0,PN.toString().indexOf('Report')) + "Report/"
+        PN = PN + IdUser + "/" + DateStart + "/" + DateEnd;
+
+        window.location.href = PN
+    });
+</script>
+{% endblock %}
