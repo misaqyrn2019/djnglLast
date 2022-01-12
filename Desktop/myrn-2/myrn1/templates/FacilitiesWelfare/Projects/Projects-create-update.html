@@ -1,0 +1,89 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	پروژه جدید
+{% endblock %}{% endblock %}
+
+{% block Css %}
+<style type="text/css">
+	.CP:hover{
+		cursor: pointer;
+	}
+	.CP{
+		color: blue;
+	}
+</style>
+{% endblock %}
+
+{% block main %}
+<div class="col-md-12" ng-controller="filterctrl">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">افزودن پروژه</h3>
+		</div>
+		<div class="card-body">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.Name|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{% include 'Template/partials/CityProvince.html' %}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{% include 'Template/partials/TypeProjects.html' %}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						{{ form.Description|as_crispy_field }}
+					</div>
+				</div>
+				<button class="btn btn-success">ثبت پروژه</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:Projects-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+
+<!-- Button trigger modal -->
+<!-- Button trigger modal -->
+</div>
+
+<label style="opacity: 0;" id="LblTypeProject">{{object.IdTypeProject.Id}}</label>
+<label style="opacity: 0;" id="LBlIdCity">{{object.IdCity.Id}}</label>
+<label style="opacity: 0;" id="LBlIdProvince">{{object.IdCity.IdProvince.Id}}</label>
+
+<script>
+	$(document).ready(function(){
+		$('#ListProject a').addClass('active')
+		
+		$("#id_IdTypeProject").select2();
+		
+		setTimeout(function(){
+			var IdCity = document.getElementById("LBlIdCity").innerText
+			var IdProvince = document.getElementById("LBlIdProvince").innerText
+			var IdTypeProject = document.getElementById("LblTypeProject").innerText
+
+			$('select[name^="IdCity"] option:selected').attr("selected", null);
+			$('#IdCity').find('option[value="' + IdCity + '"]').attr('selected','selected')
+
+			$('select[name^="SLCProvince"] option:selected').attr("selected", null);
+			$('#SLCProvince').find('option[value="' + IdProvince + '"]').attr('selected','selected')
+
+			$('select[name^="id_IdTypeProject"] option:selected').attr("selected", null);
+			$('#id_IdTypeProject').find('option[value="' + IdTypeProject + '"]').attr('selected','selected')
+
+			var NameCity = $( "#IdCity option:selected" ).text();
+			document.getElementById("select2-IdCity-container").innerHTML = NameCity
+
+			var NameProvince = $( "#SLCProvince option:selected" ).text();
+			document.getElementById("select2-SLCProvince-container").innerHTML = NameProvince
+
+			var NameTypeProject = $( "#IdTypeProject option:selected" ).text();
+			document.getElementById("select2-IdTypeProject-container").innerHTML = NameTypeProject
+		},500);
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	ثبت درخواست خانه سازمانی
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">درخواست جدید خانه سازمانی</h3>
+		</div>
+		<div class="card-body container">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						<label for="id_status" class=" requiredField">
+							پرسنل <span class="asteriskField">*</span>
+						</label>
+						<a href="#" type="button" data-toggle="modal" data-target="#myModelPersonnel">
+							<img src = "/static/admin/img/icon-addlink.svg">
+						</a>
+						<select id="IdUser" name="IdUser" class="select form-control"></select>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.IdOrganizationHouse|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.IsVerify|as_crispy_field }}
+					</div>					
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						<label for="Id_DateExpire" class=" requiredField">
+							تاریخ انقضا<span class="asteriskField">*</span>
+						</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text cursor-pointer" id="date2"><i class="fa fa-calendar"></i></span>
+							</div>
+							<input type="text" disabled id="inputDate2-text" class="form-control" placeholder="شمسی">
+							<input type="hidden" id="Id_DateExpire" name="DateExpire" class="form-control" placeholder="میلادی">
+						</div>
+					</div>		
+				</div>
+				<button id="BtnSubmit" class="btn btn-success">ثبت</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:RegisterOrganizationalHouse-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+</div>
+
+{% include 'Template/partials/User.html' %}
+
+<span style="opacity:0;" id="JDateExpire">{{object.jDateExpire}}</span>
+<span style="opacity:0;" id="MDateExpire">{{object.MDateExpire}}</span>
+
+<script type="text/javascript">
+	$('#date2').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate2-text',
+		targetDateSelector: '#Id_DateExpire',
+		enableTimePicker: false,
+		dateFormat: 'yyyy-MM-dd',
+      	textFormat: 'yyyy-MM-dd',
+	});
+    $(document).ready(function(){
+		$('#ROH a').addClass('active')
+		
+		var JDateExpire = document.getElementById('JDateExpire').innerText
+		var MDateExpire = document.getElementById('MDateExpire').innerText
+		
+		document.getElementById("inputDate2-text").value = JDateExpire
+		document.getElementById("Id_DateExpire").value = MDateExpire
+	});
+</script>
+{% endblock %}

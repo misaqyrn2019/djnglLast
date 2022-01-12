@@ -1,0 +1,104 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	درخواست خرید
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">درخواست خرید</h3>
+		</div>
+		<div class="card-body">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.IdCommodity|as_crispy_field }}
+						<a href="{% url 'inventory:Commodity-Create' %}">ثبت جنس/کالا</a>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<a style="float:right" href="#" type="button" data-toggle="modal" data-target="#myModelUnitofMeasurement">
+							<img src = "/static/admin/img/icon-addlink.svg">
+						</a>
+						<label for="Id_DateRequired" class=" requiredField">
+							واحدسنجش<span class="asteriskField">*</span>
+						</label>
+						<select name="IdUnitofMeasurement" class="select form-control" required id="id_IdUnitofMeasurement"></select>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.Count|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<label for="Id_DateRequired" class=" requiredField">
+							تاریخ نیاز<span class="asteriskField">*</span>
+						</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text cursor-pointer" id="date1"><i class="fa fa-calendar"></i></span>
+							</div>
+							<input type="text" disabled id="inputDate1-text" class="form-control" placeholder="شمسی">
+							<input type="hidden" id="id_DateRequired" name="DateRequired" class="form-control" placeholder="میلادی">
+						</div>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<a style="float:right" href="#" type="button" data-toggle="modal" data-target="#myModelStoreroom">
+							<img src = "/static/admin/img/icon-addlink.svg">
+						</a>
+						<label for="Id_DateRequired" class=" requiredField">
+							انبار<span class="asteriskField">*</span>
+						</label>
+						<select name="IdStoreroom" class="select form-control" required id="id_IdStoreroom"></select>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.PurchaseSource|as_crispy_field }}
+						<!-- <a href="{% url 'inventory:Supplier-Create' %}" -->
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.PurchasingOfficer|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.Status|as_crispy_field }}
+					</div>
+					<div class="col-12">
+						{{ form.TechnicalSpecifications|as_crispy_field }}
+					</div>
+				</div>
+				<button class="btn btn-success">ثبت بسته</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'inventory:PurchaseRequest-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+</div>
+<span style="opacity:0;" id="jDateRequired">{{object.jDateRequired}}</span>
+<span style="opacity:0;" id="MDateRequired">{{object.MDateRequired}}</span>
+{% include 'template/partials/Inventory/UnitofMeasurement.html'%}
+{% include 'template/partials/Inventory/Storeroom.html'%}
+<script>
+	$('#date1').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate1-text',
+		targetDateSelector: '#id_DateRequired',
+		enableTimePicker: false,
+		dateFormat: 'yyyy-MM-dd',
+		textFormat: 'yyyy-MM-dd',
+	});
+</script>
+{% endblock %}
+
+{% block JS %}
+<script>
+	$(document).ready(function(){
+		$("#id_IdCommodity").select2();
+		$("#id_IdUnitofMeasurement").select2();
+		$("#id_IdStoreroom").select2();
+
+		var jDateRequired = document.getElementById('jDateRequired').innerText
+		var MDateRequired = document.getElementById('MDateRequired').innerText
+		document.getElementById("inputDate1-text").value = jDateRequired
+		document.getElementById("id_DateRequired").value = MDateRequired
+	})
+	$('#IPPR a').addClass('active')
+</script>
+{% endblock %}

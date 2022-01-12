@@ -1,0 +1,112 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	ثبت کالا
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-left">تعریف کالا</h3>
+		</div>
+		<div class="card-body">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.Status|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.IdCommodity|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.IdStoreroom|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.Count|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<label for="Id_StartDateTime" class=" requiredField">
+							تاریخ<span class="asteriskField">*</span>
+						</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text cursor-pointer" id="date2"><i class="fa fa-calendar"></i></span>
+							</div>
+							<input type="text" disabled id="inputDate2-text" class="form-control" placeholder="شمسی">
+							<input type="hidden" id="id_DateEntry" name="DateEntry" class="form-control" placeholder="میلادی">
+						</div>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.IdCustomer|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.Serial|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<label for="Id_StartDateTime" class=" requiredField">
+							تاریخ انقضا<span class="asteriskField">*</span>
+						</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text cursor-pointer" id="date1"><i class="fa fa-calendar"></i></span>
+							</div>
+							<input type="text" disabled id="inputDate1-text" class="form-control" placeholder="شمسی">
+							<input type="hidden" id="id_DateExpired" name="DateExpired" class="form-control" placeholder="میلادی">
+						</div>
+					</div>
+					<div class="col-12">
+						{{ form.Description|as_crispy_field }}
+					</div>
+					
+				</div>
+				<button class="btn btn-success">ثبت</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'inventory:EntryCommodity-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+		<span style="opacity:0;" id="jDateExpired">{{object.jDateExpired}}</span>
+		<span style="opacity:0;" id="MDateExpired">{{object.MDateExpired}}</span>
+		<span style="opacity:0;" id="jDateEntry">{{object.jDateEntry}}</span>
+		<span style="opacity:0;" id="MDateEntry">{{object.MDateEntry}}</span>
+	<script>
+		$('#date1').MdPersianDateTimePicker({
+			targetTextSelector: '#inputDate1-text',
+			targetDateSelector: '#id_DateExpired',
+			enableTimePicker: false,
+			dateFormat: 'yyyy-MM-dd',
+			textFormat: 'yyyy-MM-dd',
+		});
+		$('#date2').MdPersianDateTimePicker({
+			targetTextSelector: '#inputDate2-text',
+			targetDateSelector: '#id_DateEntry',
+			enableTimePicker: false,
+			dateFormat: 'yyyy-MM-dd',
+			textFormat: 'yyyy-MM-dd',
+		});
+		$(document).ready(function(){
+			$("#id_IdCommodity").select2();
+			$("#id_IdStoreroom").select2();
+			$("#id_IdCustomer").select2();
+			var jDateExpired = document.getElementById('jDateExpired').innerText
+			var MDateExpired = document.getElementById('MDateExpired').innerText
+			document.getElementById("id_DateExpired").value = MDateExpired
+			document.getElementById("inputDate1-text").value = jDateExpired
+
+
+			var jDateEntry = document.getElementById('jDateEntry').innerText
+			var MDateEntry = document.getElementById('MDateEntry').innerText
+			document.getElementById("inputDate2-text").value = jDateEntry
+			document.getElementById("id_DateEntry").value = MDateEntry
+		});
+	</script>
+</div>
+{% endblock %}
+
+{% block JS %}
+<script>
+	$('#IEC a').addClass('active')
+</script>
+{% endblock %}

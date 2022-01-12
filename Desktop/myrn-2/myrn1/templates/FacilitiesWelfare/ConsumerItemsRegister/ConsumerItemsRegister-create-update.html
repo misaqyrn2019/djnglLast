@@ -1,0 +1,121 @@
+{% extends 'Template/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	ایجاد اقلام مصرفی
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">افزودن اقلام مصرفی</h3>
+		</div>
+		<div class="card-body container">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				{% include 'Template/partials/PersonnelGroup.html' %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.IdConsumerItems|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						{{ form.IsReceived|as_crispy_field }}
+					</div>
+				</div>
+				<button id="BtnSubmit" class="btn btn-success">ثبت</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:ConsumerItemsRegister-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+	</div>
+</div>
+{% include 'Template/partials/User.html' %}
+<script>
+	function FnChange(){
+		var SLCUser = document.getElementById("CHKTF").checked
+		if(SLCUser == true)
+		{
+			$('#GroupSelect').show(1000)
+			$('#OneSelct').hide(1000);			
+		}
+		else if(SLCUser == false)
+		{
+			$('#GroupSelect').hide(1000)
+			$('#OneSelct').show(1000);
+		}
+	}
+	function FNReadPersonnel(){
+		debugger;
+		$('#UserPersonnel').empty()
+		var IdGroup = 1
+		IdGroup = $('#IdGroup').val()
+		if(IdGroup == undefined)
+			IdGroup = 1
+        $.ajax({
+            url: '/HR/API/APIPersonnelWithFilterGroup/' + IdGroup ,
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+			data:JSON.stringify({'IdGroup': IdGroup}),
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                for (let i = 0; i < arg.length; i++)
+					$('#UserPersonnel').append("<option value='" + arg[i].Id + "'>" + arg[i].Id + " " + arg[i].Name + " " + arg[i].Family + "</option>")
+            },
+            error:function(error){
+                alert("خطایی رخ داد!");
+            }
+        });
+	}
+	function FNReadGroup()
+	{
+		$('#IdGroup').empty()
+        $.ajax({
+            url: '{% url 'HR:APIGroup' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+				$('#IdGroup').empty()
+                for (let i = 0; i < arg.length; i++)
+					$('#IdGroup').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                alert("خطایی رخ داد!");
+            }
+        });
+	}
+    $(document).ready(function(){
+		$('#CIR a').addClass('active')
+		if(location.href.toString() =='update')
+		{
+
+		}
+		$('#GroupSelect').hide()
+		$('#OneSelct').show();
+		$('#BtnSubmit').click(function(){
+			var ListUser = "";
+			$('#UserPersonnel option:selected').each(function(){
+				ListUser += this.value + ",";
+			});
+			ListUser = ListUser.substring(0,ListUser.length-1)
+			$('#Personnels').val(ListUser)
+		});
+
+		FNReadGroup();
+		FNReadPersonnel();
+
+		$('#id_TypeAssistance').val('PR')
+
+		if (location.href.toString().search('update') != -1)
+			$('#SeC').css('display','none');
+	});
+</script>
+{% endblock %}

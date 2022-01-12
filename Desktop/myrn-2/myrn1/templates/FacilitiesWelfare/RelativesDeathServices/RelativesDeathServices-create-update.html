@@ -1,0 +1,81 @@
+{% extends 'Template/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	خدمات فوت بستگان
+{% endblock %}{% endblock %}
+
+{% block main %}
+<div class="col-md-12">
+	<div class="card card-primary">
+		<div class="card-header">
+			<h3 class="card-title mb-0 float-right">افزودن خدمات فوت</h3>
+		</div>
+		<div class="card-body container">
+			<form method="post" enctype="multipart/form-data">{% csrf_token %}
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.Name|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.Family|as_crispy_field }}
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						<label for="Id_DeathDate" class=" requiredField">
+							تاریخ فوت<span class="asteriskField">*</span>
+						</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text cursor-pointer" id="date2"><i class="fa fa-calendar"></i></span>
+							</div>
+							<input type="text" disabled id="inputDate2-text" class="form-control" placeholder="شمسی">
+							<input type="hidden" id="Id_DeathDate" name="DeathDate" class="form-control" placeholder="میلادی">
+						</div>
+					</div>
+                    <div class="col-sm-4 col-md-4 col-lg-3">
+						<label for="id_status" class=" requiredField">
+							پرسنل <span class="asteriskField">*</span>
+						</label>
+						<a href="#" type="button" data-toggle="modal" data-target="#myModelPersonnel">
+							<img src = "/static/admin/img/icon-addlink.svg">
+						</a>
+						<select id="IdUser" name="IdUser" class="select form-control"></select>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3">
+						{{ form.Relation|as_crispy_field }}
+					</div>
+					<div class="col-12">
+						{{ form.Description|as_crispy_field }}
+					</div>
+				</div>
+				<button id="BtnSubmit" class="btn btn-success">ثبت</button>
+				{% if user.is_superuser and item.pk %}
+				<a class="badge text-danger" href="{% url 'FacilitiesWelfare:RelativesDeathServices-Delete' item.pk %}">حذف</a>
+				{% endif %}
+			</form>
+		</div>
+</div>
+<span style="opacity:0;" id="JDeathDate">{{object.jDeathDate}}</span>
+<span style="opacity:0;" id="MDeathDate">{{object.MDeathDate}}</span>
+{% include 'Template/partials/User.html' %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#id_IdUser").select2();
+		$("#id_Relation").select2();
+
+		var JDeathDate = document.getElementById('JDeathDate').innerText
+		var MDeathDate = document.getElementById('MDeathDate').innerText
+		
+		document.getElementById("inputDate2-text").value = JDeathDate
+		document.getElementById("Id_DeathDate").value = MDeathDate
+	});
+	$('#date2').MdPersianDateTimePicker({
+			targetTextSelector: '#inputDate2-text',
+			targetDateSelector: '#Id_DeathDate',
+			enableTimePicker: false,
+			dateFormat: 'yyyy-MM-dd',
+			textFormat: 'yyyy-MM-dd',
+		});
+	$('#RDS a').addClass('active')
+</script>
+{% endblock %}

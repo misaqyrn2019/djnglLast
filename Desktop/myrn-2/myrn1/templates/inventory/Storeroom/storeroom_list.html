@@ -1,0 +1,107 @@
+{% extends 'Template/base.html' %}
+
+{% block title %}{% block title-meta %}
+	لیست انبار
+{% endblock %}{% endblock %}
+
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'inventory:Create' %}">تعریف انبار</a>
+{% endblock %}
+
+{% block main %}
+    {% if object_list %}
+    <table id="TBLScript" class="table table-striped display table-bordered tableResponse responsive" style="width:100%">
+        <thead>
+            <tr>
+                <th>نام انبار</th>
+                <th>شهر</th>
+                <th>آدرس انبار</th>
+                <th>وضعیت انبار</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in object_list %}
+                <tr>
+                    <td data-label="نام انبار">
+                        <a href="{% url 'inventory:StoreroomListReport' IdStoreroom=item.Id %}" target="_blank">
+                            {{item.Name}}
+                        </a>
+                    </td>
+                    <td data-label="شهر">{{item.IdCity}}</td>
+                    <td data-label="آدرس انبار">{{item.Address|safe}}</td>
+                    <td data-label="وضعیت انبار">
+                    {% if item.status == "A"%}
+                        فعال
+                    {% elif item.status == "N" %}
+                        غیر فعال
+                    {% endif %}
+                    </td>
+                    <td data-label="عملیات">
+                        {% if user.is_superuser or user.is_storekeeper %}
+                        <a class="badge text-danger" href="{% url 'inventory:Storeroom-Delete' item.pk %}">حذف</a>
+                        <a class="badge text-succsess" href="{% url 'inventory:Storeroom-update' item.pk %}">ویرایش</a>
+                        <a href="{% url 'inventory:StoreroomListReport' IdStoreroom=item.Id %}" target="_blank">
+                            گزارش اقلام {{item.Name}}
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست انبار خالی است
+            <br>
+            <a href="{% url 'inventory:Create' %}">
+                تعریف انبار
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block JS %}
+<script>
+    $(document).ready(function(){
+            function fn(){
+                $("#A1").select2();
+                $("#A2").select2();
+                $("#A3").select2();
+            };
+            $('#TBLScript').DataTable({
+            initComplete: function () {
+                this.api().columns([1,2,3]).every( function (ee) {
+                    var column = this;
+                    var select = $('<select style="width:100% !important" id="A'+ ee +'"><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+                            column
+                                .search(val ? '^'+val+'$' : '', true, false)
+                                .draw();
+                        });
+                    column.data().unique().sort().each( function ( d, j ) {
+                        select.append('<option value="'+d+'">'+d+'</option>')
+                    });
+                    fn();
+                });
+            }
+            });
+        });
+</script>
+{% endblock %}

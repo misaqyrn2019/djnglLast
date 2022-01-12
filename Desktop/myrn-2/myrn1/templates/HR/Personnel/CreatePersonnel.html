@@ -1,0 +1,399 @@
+{% extends 'Template/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	افزودن پرسنل
+{% endblock %}{% endblock %}
+
+{% block main %}
+<a href="{% url 'HR:ListPersonnel' %}">لیست پرسنل</a>
+<div class="row">
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.Name|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.Family|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <section>
+            <label for="Id_DateBirthDay" class=" requiredField">
+                تاریخ تولد<span class="asteriskField">*</span>
+            </label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text cursor-pointer" id="date11"><i class="fa fa-calendar"></i></span>
+                </div>
+                <input type="text" disabled id="inputDate11-text" class="form-control" placeholder="شمسی">
+                <input type="hidden" id="Id_DateBirthDay" name="DateBirthDay" class="form-control" placeholder="میلادی" required>
+            </div>
+        </section>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.NationalCode|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.IdNumber|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.HomePhoneNumber|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.MobileNumber|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.EmergencyNumber|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.Email|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.UserName|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.Password|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <div id="div_id_Gender" class="form-group">
+            <label for="id_Gender" class=" requiredField">
+                جنسیت<span class="asteriskField">*</span>
+            </label>
+            <select name="Gender" class="select form-control" id="id_Gender">
+                <option value="M" selected="">مذکر</option>
+                <option value="F">مونث</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <div id="div_id_MaritalStatus" class="form-group">
+            <label for="id_MaritalStatus" class=" requiredField">
+                وضعیت تأهل<span class="asteriskField">*</span>
+            </label>
+            <select name="MaritalStatus" class="select form-control" id="id_MaritalStatus">
+                <option value="N">مجرد</option>
+                <option value="Y" selected="">متاهل</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <section id="DTMarried">
+            <label for="Id_DateMarried" class=" requiredField">
+                تاریخ ازدواج<span class="asteriskField"></span>
+            </label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text cursor-pointer" id="date22"><i class="fa fa-calendar"></i></span>
+                </div>
+                <input type="text" disabled id="inputDate22-text" class="form-control" placeholder="شمسی" required>
+                <input type="hidden" id="Id_DateMarried" name="DateMarried" class="form-control" placeholder="میلادی">
+            </div>
+        </section>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.IsActive|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <a style="float:right" href="#" type="button" data-toggle="modal" data-target="#myModelFieldofStudy">
+            <img src="/static/admin/img/icon-addlink.svg">
+        </a>
+        <label for="IdFieldofStudy" class=" requiredField">
+            رشته تحصیلی<span class="asteriskField">*</span>
+        </label>
+        <select name="IdFieldofStudy" class="select form-control" required="" id="IdFieldofStudy"></select>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.IdGradeofStudy|as_crispy_field}}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <a style="float:right" href="#" type="button" data-toggle="modal" data-target="#myOrganization">
+            <img src="/static/admin/img/icon-addlink.svg">
+        </a>
+        <label for="IdOrganization" class=" requiredField">
+            سازمان<span class="asteriskField">*</span>
+        </label>
+        <section>
+            <select id="IdOrganization" name="IdOrganization" class="select form-control"></select>
+        </section>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <a style="float:right" href="#" type="button" data-toggle="modal" data-target="#myModelGroup">
+            <img src="/static/admin/img/icon-addlink.svg">
+        </a>
+        <label for="IdGroup" class=" requiredField">
+            گروه سازمانی<span class="asteriskField">*</span>
+        </label>
+        <section>
+            <select id="IdGroup1" name="IdGroup" class="select form-control"></select>
+        </section>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <a style="float:right" href="#" type="button" data-toggle="modal" data-target="#myModelPost">
+            <img src="/static/admin/img/icon-addlink.svg">
+        </a>
+        <label for="IdPost" class=" requiredField">
+            سمت سازمانی<span class="asteriskField">*</span>
+        </label>
+        <section>
+            <select id="IdPost" name="IdPost" class="select form-control"></select>
+        </section>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {% include 'Template/partials/CityProvince.html' %}
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        {{form.Address|as_crispy_field}}
+    </div>
+</div>
+<input type="submit" class="btn btn-success" id="SavePersonnel" value="ثبت"/>
+{% include 'Template/partials/HR/FieldofStudy.html' %}
+{% include 'Template/partials/HR/Group.html' %}
+{% include 'Template/partials/HR/Post.html' %}
+{% include 'Template/partials/HR/Organization.html' %}
+
+<script>
+	$('#date11').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate11-text',
+		targetDateSelector: '#Id_DateBirthDay',
+		enableTimePicker: false,
+        dateFormat: 'yyyy-MM-dd 00:00:00',
+      	textFormat: 'yyyy-MM-dd',
+	});
+	$('#date22').MdPersianDateTimePicker({
+		targetTextSelector: '#inputDate22-text',
+		targetDateSelector: '#Id_DateMarried',
+		enableTimePicker: false,
+        dateFormat: 'yyyy-MM-dd 00:00:00',
+      	textFormat: 'yyyy-MM-dd',
+	});
+    var CheckTypeEmail = 0
+    var CTEmail = ""
+    var CheckTypeUserName = 0
+    var CTUserName = ""
+    var CheckTypeNumberPersonnel = 0
+    var CTNumberPersonnel = ""
+    var CheckTypeNationalCode = 0
+    var CTNationalCode = ""
+    function Organization()
+    {
+        $.ajax({
+            url: '{% url 'HR:APIListTopOrganization' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                $('#IdOrganization').empty()
+                for (let i = 0; i < arg.length; i++){
+                    if(i == arg.length - 1)
+                        $('#IdOrganization').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+                    else
+                        $('#IdOrganization').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+                }
+            },
+            error:function(error){
+                debugger;
+                alert("217خطایی رخ داد!");
+            }
+        });
+    }
+    function FieldofStudy(){
+        $.ajax({
+            url: '{% url 'HR:APIFieldofStudy' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                $('#IdFieldofStudy').empty()
+                for (let i = 0; i < arg.length; i++)
+                    $('#IdFieldofStudy').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                alert("120خطایی رخ داد!");
+            }
+        });
+    }
+    function Post(){
+        $.ajax({
+            url: '{% url 'HR:APIPost' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                $('#IdPost').empty()
+                for (let i = 0; i < arg.length; i++)
+                    $('#IdPost').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                debugger;
+                alert("139خطایی رخ داد!");
+            }
+        });
+    }
+    function Group()
+    {
+        $.ajax({
+            url: '{% url 'HR:APIGroup' %}',
+            type: 'GET',
+            dataType:"json",
+            contentType:"application/json;charset=utf-8",
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            },
+            success: function (arg) {
+                $('#IdGroup1').empty()
+                for (let i = 0; i < arg.length; i++)
+                    $('#IdGroup1').append("<option value='" + arg[i].Id + "'>" + arg[i].Title + "</option>")
+            },
+            error:function(error){
+                debugger;
+                alert("159خطایی رخ داد!");
+            }
+        });
+    }
+    $(document).ready(function(){
+        $("#IdGroup1").select2();
+        $("#IdPost").select2();
+        $("#IdGradeofStudy").select2();
+        $("#IdFieldofStudy").select2();
+        $('#IdOrganization').select2();
+        Post();
+        Group();
+        FieldofStudy();
+        Organization();
+    });
+    $('#SavePersonnel').click(function(){
+            debugger
+            var Name = $('#id_Name').val()
+            var Family = $('#id_Family').val()
+            var Id_DateBirthDay = $('#Id_DateBirthDay').val()
+            var Address = $('#id_Address').val()
+            var NationalCode = $('#id_NationalCode').val()
+            var HomePhoneNumber = $('#id_HomePhoneNumber').val()
+            var MobileNumber = $('#id_MobileNumber').val()
+            var EmergencyNumber = $('#id_EmergencyNumber').val()
+            var Email = $('#id_Email').val()
+            var UserName = $('#id_UserName').val()
+            var Password = $('#id_Password').val()
+            var Id_DateMarried = $('#Id_DateMarried').val()
+            var Gender = $('#id_Gender').val()
+            var MaritalStatus = $('#id_MaritalStatus').val()
+            var IsActive = $('#id_IsActive').val()
+            if(IsActive=="on" || IsActive == "true" || IsActive == true)
+                IsActive = "Y"
+            else
+                IsActive = "N"
+            var IdFieldofStudy = $('#IdFieldofStudy').val()
+            var IdOrganization = $('#IdOrganization').val()
+            var IdGradeofStudy = $('#id_IdGradeofStudy').val()
+            var IdPost = $('#IdPost').val()
+            var IdGroup = $('#IdGroup1').val()
+            var IdProvince = $('#SLCProvince').val()
+            var IdCity = $('#IdCity').val()
+            var IdNumber = $('#id_IdNumber').val()
+            if(MaritalStatus == "N"){
+                if(Id_DateMarried == "")
+                    Id_DateMarried = "1900-01-01 00:00:00"
+            }
+            else if(MaritalStatus == "Y"){
+                if(Id_DateMarried == ""){
+                    $('#Id_DateMarried').focus()
+                    alert("لطفا تاریخ ازدواج را وارد نمائید")
+                    return;
+                }
+            }
+            if(Id_DateBirthDay == ""){
+                $('#Id_DateBirthDay').focus()
+                alert("لطفا تاریخ تولد را وارد نمائید")
+                return;
+            }
+            if(NationalCode == "")
+            {
+                alert("لطفا کد ملی را وارد نمائید")
+                return
+            }
+            if(Email == "")
+            {
+                alert("لطفا ایمیل را وارد نمائید")
+                return
+            }
+            if(UserName == "")
+            {
+                alert("لطفا نام کاربری را وارد نمائید")
+                return
+            }
+            if(Password == "")
+            {
+                alert("لطفا رمز عبور را وارد نمائید")
+                return
+            }
+            if(Family == "")
+            {
+                alert("لطفا نام خانوادگی را وارد نمائید")
+                return
+            }
+			$.ajax({
+				url: '{% url 'HR:APIPersonnel' %}',
+				type: 'POST',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				data:JSON.stringify({'Name':Name,
+                                     'Family':Family,
+                                     'DateBirthDay':Id_DateBirthDay,
+                                     'Address':Address,
+                                     'NationalCode':NationalCode,
+                                     'IdNumber':IdNumber,
+                                     'HomePhoneNumber':HomePhoneNumber,
+                                     'MobileNumber':MobileNumber,
+                                     'EmergencyNumber':EmergencyNumber,
+                                     'Email':Email,
+                                     'UserName':UserName,
+                                     'Password':Password,
+                                     'DateMarried':Id_DateMarried,
+                                     'Gender':Gender,
+                                     'MaritalStatus':MaritalStatus,
+                                     'IsActive':IsActive,
+                                     'IdProvince':IdProvince,
+                                     'IdGradeofStudy':IdGradeofStudy,
+                                     'IdCity':IdCity,
+                                     'IdFieldofStudy':IdFieldofStudy,
+                                     'IdOrganization':IdOrganization,
+                                     'IdPost':IdPost,
+                                     'IdGroup':IdGroup,
+                                }),
+				success: function (arg) {
+                    window.location.href = "{% url 'HR:ListPersonnel' %}"
+				},
+				error:function(error){
+                    alert("OK")
+                    debugger
+                    // array = Object.values(error.responseJSON)
+                    // for (let index = 0; index < array.length; index++) {
+                    //     alert(array[index])
+                    // }
+                    // return
+				}
+			});
+        });
+    $('#id_MaritalStatus').change(function(){
+        if($('#id_MaritalStatus').val() == 'Y'){
+            $('#DTMarried').show();
+        }
+        else{
+            $('#DTMarried').hide();
+            $('#Id_DateMarried').val("")
+            $('#inputDate22-text').val("")
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'Template/base.html' %}
+{% load static %}
+
+{% block title %}{% block title-meta %}
+	نوع پروژه ها
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'FacilitiesWelfare:CreateTFPR' %}">تعریف نوع پروژه</a>
+{% endblock %}
+
+{% block main %}
+    {% if object_list %}
+    <table id="TBLTypeProject" class="table table-striped display table-bordered tableResponse responsive" style="width:100%">
+        <thead>
+            <tr>
+                <th>شناسه</th>
+                <th>نوع پروژه</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in object_list %}
+            <tr>
+                <td data-label="شناسه">{{item.Id}}</td>
+                <td data-label="نوع پروژه">{{item.Name}}</td>
+                <td data-label="عملیات">
+                    {% if user.is_superuser or user.is_FacilitiesWelfare %}
+                    <a class="badge text-danger" href="{% url 'FacilitiesWelfare:TypeProjects-Delete' item.pk %}">حذف</a>
+                    <a class="badge text-succsess" href="{% url 'FacilitiesWelfare:TypeProjects-update' item.pk %}">ویرایش</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            نوع پروژه ها خالی است
+            <br>
+            <a href="{% url 'FacilitiesWelfare:CreateTFPR' %}">
+                تعریف نوع پروژه
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block JS %}
+<script>
+    $(document).ready(function(){
+        function fn(){
+            $("#A1").select2();
+        };
+        $('#TBLTypeProject').DataTable({
+        initComplete: function () {
+            this.api().columns([1]).every( function (ee) {
+                var column = this;
+                var select = $('<select style="width:100% !important" id="A'+ ee +'"><option value=""></option></select>')
+                    .appendTo($(column.footer()).empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^'+val+'$' : '', true, false)
+                            .draw();
+                    });
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append('<option value="'+d+'">'+d+'</option>')
+                });
+                fn();
+            });
+        }
+        });
+    });
+</script>
+{% endblock %}

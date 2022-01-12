@@ -1,0 +1,119 @@
+{% extends 'Template/base.html' %}
+
+
+{% block title %}{% block title-meta %}
+	مشتری ها
+{% endblock %}{% endblock %}
+
+{% block Create %}
+    <a class="badge text-primary" href="{% url 'inventory:Customer-Create' %}">تعریف مشتری</a>
+{% endblock %}
+
+
+{% block main %}
+    {% if object_list %}
+    <table id="TBLScript" class="table table-striped display table-bordered tableResponse responsive" style="width:100%">
+        <thead>
+            <tr>
+                <th>کدمشتری</th>
+                <th>نام</th>
+                <th>نام خانوادگی</th>
+                <th>شماره تلفن</th>
+                <th>شماره همراه</th>
+                <th>کدملی/شماره اقتصادی</th>
+                <th>مانده اول دوره</th>
+                <th>بستانکار/بدهکار</th>
+                <th>آدرس</th>
+                <th>کدپستی</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in object_list %}
+                <tr>
+                    <td data-label="کدمشتری" class="col-sm-1">{{item.AccountSideCode}}</td>
+                    <td data-label="نام" class="col-sm-1">{{item.Name}}</td>
+                    <td data-label="نام خانوادگی" class="col-sm-1">{{item.Family}}</td>
+                    <td data-label="شماره تلفن" class="col-sm-1">{{item.TelephoneCustomer}}</td>
+                    <td data-label="شماره همراه" class="col-sm-1">{{item.Mobile}}</td>
+                    <td data-label="کدملی/شماره اقتصادی" class="col-sm-1">{{item.EconomicNumber}}</td>
+                    <td data-label="مانده اول دوره" class="col-sm-1">{{item.FirstBalanceCourse}}</td>
+                    {% if item.Status == "A" %}
+                        <td data-label="بستانکار/بدهکار" class="col-sm-1">بی حساب</td>
+                    {% elif item.Status == "B" %}
+                        <td data-label="بستانکار/بدهکار" class="col-sm-1">بدهکار</td>
+                    {% elif item.Status == "C" %}
+                        <td data-label="بستانکار/بدهکار" class="col-sm-1">بستانکار</td>
+                    {% endif %}
+                    <td data-label="آدرس" class="col-sm-2">{{item.Address|safe}}</td>
+                    <td data-label="کدپستی" class="col-sm-1">{{item.PostalCode}}</td>
+                    <td data-label="عملیات" class="col-sm-1">
+                        {% if user.is_superuser or user.is_storekeeper %}
+                        <a class="badge text-danger" href="{% url 'inventory:Customer-Delete' item.pk %}">حذف</a>
+                        <a class="badge text-succsess" href="{% url 'inventory:Customer-update' item.pk %}">ویرایش</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
+    {% else %}
+    <div style="min-height:200px;">
+        <P class="text-center">
+            لیست مشتری خالی است
+            <br>
+            <a href="{% url 'inventory:Customer-Create' %}">
+                تعریف مشتری
+            </a>
+        </P>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block JS %}
+<script>
+    $(document).ready(function(){
+        function fn(){
+            $("#A2").select2();
+            $("#A6").select2();
+            $("#A7").select2();
+        };
+        $('#TBLScript').DataTable({
+        initComplete: function () {
+            this.api().columns([2,6,7]).every( function (ee) {
+                var column = this;
+                var select = $('<select style="width:100% !important" id="A'+ ee +'"><option value=""></option></select>')
+                    .appendTo($(column.footer()).empty())
+                    .on('change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+                        column
+                            .search(val ? '^'+val+'$' : '', true, false)
+                            .draw();
+                    });
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append('<option value="'+d+'">'+d+'</option>')
+                });
+                fn();
+            });
+        }
+        });
+    });
+</script>
+{% endblock %}

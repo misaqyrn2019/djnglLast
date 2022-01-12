@@ -1,0 +1,132 @@
+{% extends 'Template/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% block title-meta %}
+	لیست پرسنل
+{% endblock %}{% endblock %}
+
+{% block main %}
+<a href="{% url 'HR:CreatePersonnel' %}">تعریف پرسنل</a>
+{% if object_list %}
+<table id="TBL" class="table table-striped nowrap display table-bordered" style="width:100%">
+    <thead>
+        <tr>
+            <th>شماره پرسنلی</th>
+            <th>نام</th>
+            <th>نام خانوادگی</th>
+            <th>تاریخ تولد</th>
+            <th>کدملی</th>
+            <th>شماره شناسنامه</th>
+            <th>شماره منزل</th>
+            <th>شماره همراه</th>
+            <th>شماره اظطراری</th>
+            <th>ایمیل</th>
+            <th>نام کاربری</th>
+            <th>تاریخ ازدواج</th>
+            <th>جنسیت</th>
+            <th>وضعیت تأهل</th>
+            <th>فعال</th>
+            <th>نام شهر</th>
+            <th>مقطع تحصیلی</th>
+            <th>رشته تحصیلی</th>
+            <th>پست</th>
+            <th>سازمان</th>
+            <th>گروه</th>
+            <th>آدرس</th>
+            <th>عملیات</th>
+            <th>جزییات پرسنل</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in object_list %}
+            <tr>
+                <td data-label="شماره پرسنلی">{{item.Id}}</td>
+                <td data-label="نام">{{item.Name}}</td>
+                <td data-label="نام خانوادگی">{{item.Family}}</td>
+                <td data-label="تاریخ تولد">{{item.jDateBirthDay}}</td>
+                <td data-label="کدملی">{{item.NationalCode}}</td>
+                <td data-label="شماره شناسنامه">{{item.IdNumber}}</td>
+                <td data-label="شماره منزل">{{item.HomePhoneNumber}}</td>
+                <td data-label="شماره همراه">{{item.MobileNumber}}</td>
+                <td data-label="شماره اظطراری">{{item.EmergencyNumber}}</td>
+                <td data-label="ایمیل">{{item.Email}}</td>
+                <td data-label="نام کاربری">{{item.UserName}}</td>
+                <td data-label="تاریخ ازدواج">
+                    {% if item.MaritalStatus == "Y" %}
+                        <span>{{item.jDateMarried}}</span>
+                    {% elif item.MaritalStatus == "N" %}
+                        <span>-</span>
+                    {% endif %}
+                </td>
+                <td data-label="جنسیت">
+                    {% if item.Gender == 'M' %}<span>مذکر</span>
+                    {% elif item.Gender == 'F' %}<span>مونث</span>
+                    {% endif %}
+                </td>
+                <td data-label="وضعیت تاهل">
+                    {% if item.MaritalStatus == "Y" %}<span>متأهل</span>
+                    {% elif item.MaritalStatus == "N" %}<span>مجرد</span>
+                    {% endif %}
+                </td>
+                <td data-label="فعال">
+                    {% if item.IsActive == 'Y' %}<span>فعال</span>
+                    {% elif item.IsActive == 'N' %}<span>غیرفعال</span>
+                    {% endif %}
+                </td>
+                <td data-label="نام شهر">{{item.IdCity}}</td>
+                <td data-label="مقطع تحصیلی">
+                    {% if item.IdGradeofStudy == 'SI' %}<span>سیکل</span>
+                    {% elif item.IdGradeofStudy == 'DI' %}<span>دیپلم</span>
+                    {% elif item.IdGradeofStudy == 'KA' %}<span>کاردانی</span>
+                    {% elif item.IdGradeofStudy == 'KAR' %}<span>کارشناسی</span>
+                    {% elif item.IdGradeofStudy == 'ARS' %}<span>کارشناسی ارشد</span>
+                    {% elif item.IdGradeofStudy == 'DR' %}<span>دکتر</span>
+                    {% elif item.IdGradeofStudy == 'FDR' %}<span>فوق دکتری</span>
+                    {% elif item.IdGradeofStudy == 'PE' %}<span>پزشک</span>
+                    {% elif item.IdGradeofStudy == 'PEM' %}<span>پزشک متخصص</span>
+                    {% endif %}
+                </td>
+                <td data-label="رشته تحصیلی">{{item.IdFieldofStudy}}</td>
+                <td data-label="پست">{{item.IdPost}}</td>
+                <td data-label="سازمان">{{item.IdOrganization}}</td>
+                <td data-label="گروه">{{item.IdGroup}}</td>
+                <td data-label="آدرس">{{item.Address}}</td>
+                <td data-label="عملیات">
+                    <a href="{% url 'HR:UpdatePersonnel' item.Id %}">
+                        ویرایش
+                    </a>
+                </td>
+                <td data-label="جزییات پرسنل"></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div style="min-height:200px;">
+    <P class="text-center">
+        لیست پرسنل خالی است
+    </P>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block JS %}
+<script>
+    $(document).ready(function() {
+        var table = $('#TBL').DataTable( {
+            responsive: {
+                details: {
+                    type: 'column',
+                    target: -1
+                }
+            },
+            columnDefs: [ {
+                className: 'dtr-control',
+                orderable: false,
+                targets:   -1
+            } ]
+        });
+    });
+</script>
+{% endblock %}

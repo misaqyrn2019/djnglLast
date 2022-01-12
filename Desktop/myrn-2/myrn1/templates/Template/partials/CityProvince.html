@@ -1,0 +1,305 @@
+<div class="col-sm-12 col-md-12 col-lg-12">
+    <div class="row">
+		<a href="#" type="button" data-toggle="modal" data-target="#myModalProvince">
+			<img src = "/static/admin/img/icon-addlink.svg">
+		</a>
+		<label>استان*</label>
+		<select id="SLCProvince" name="IdProvince" class="select form-control"></select>
+    </div>
+    <div class="row">
+		<a href="#" type="button" data-toggle="modal" data-target="#myModalCity">
+			<img src = "/static/admin/img/icon-addlink.svg">
+		</a>
+		<label>شهر*</label>
+		<select id="IdCity" name="IdCity" class="select form-control"></select>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalProvince" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				نام استان
+				<input type="text" id="TxtNameProvince" class="textinput textInput form-control" />
+				<br>
+				<input type="button" id="BtnSaveProvince" value="ثبت" class="btn btn-success" />
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="myModalCity" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				نام شهر
+				<input type="text" id="TxtNameCity" class="textinput textInput form-control" />
+				<br>
+				<input type="button" id="BtnSaveCity" value="ثبت" class="btn btn-success" />
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<label style="opacity:0;" id="LblProvince">{{object.IdCity.IdProvince.Id}}</label>
+<label style="opacity:0;" id="LBlCity">{{object.IdCity.Id}}</label>
+
+<script>
+		var LOC = -1;
+		var LOC2 = -1;
+		var LblProvince = 0;
+		var LBlCity = 0;
+		function ChooseProvince()
+		{
+			var IdProvince = $('#SLCProvince').val()
+			ListCityViaCall()
+		}
+		function ChooseCity()
+		{
+			var IdProvince = $('#SLCProvince').val()
+			ListCity(IdProvince)
+		}
+		function ListProvince()
+		{
+			$.ajax({
+				url: '/account/API/ApiListProvince',
+				type: 'GET',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				success: function (arg) {
+					debugger
+					$('#SLCProvince').empty()
+					for (let i = 0; i < arg.length; i++)
+					{
+						if(LOC != -1 | LOC2 != -1)
+						{
+							if(arg[i].Id == parseInt(LblProvince))
+								$('#SLCProvince').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+							else
+								$('#SLCProvince').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+						}
+						else
+							$('#SLCProvince').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+					}
+					if(location.href.toString().search("update")==-1)
+						ChooseCity();
+				},
+				error:function(error){
+					alert("132خطایی رخ داد!");
+				}
+			});
+		}
+		function ListProvinceViaAddButton()
+		{
+			$.ajax({
+				url: '/account/API/ApiListProvince',
+				type: 'GET',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				success: function (arg) {
+					debugger
+					$('#SLCProvince').empty()
+					for (let i = 0; i < arg.length; i++)
+						$('#SLCProvince').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+					$('#SLCProvince option:last').prop("selected","selected")
+					ChooseProvince();
+					ListCity($('#SLCProvince').val());
+				},
+				error:function(error){
+					alert("132خطایی رخ داد!");
+				}
+			});
+		}
+		function ListCity(IdProvince)
+		{
+			if(LOC != -1 | LOC2 != -1)
+				IdProvince = parseInt(document.getElementById("LblProvince").innerHTML)
+			else
+				IdProvince = $('#SLCProvince').val()
+			if(IdProvince == null)
+			{
+				IdProvince = parseInt($("#SLCProvince option:first").val());
+			}
+			if(IdProvince.toString()=="NaN")
+			{
+				IdProvince = 1
+			}
+			$.ajax({
+				url: '/account/API/ApiCityList/' + parseInt(IdProvince),
+				type: 'GET',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				success: function (arg) {
+					debugger
+					$('#IdCity').empty()
+					for (let i = 0; i < arg.length; i++)
+					{
+						if(LOC != -1 | LOC2 != -1)
+						{
+							if(arg[i].Id == parseInt(LBlCity))
+								$('#IdCity').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+							else
+								$('#IdCity').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+						}
+						else
+							$('#IdCity').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+					}
+				},
+				error:function(error){
+
+					alert("173خطایی رخ داد!");
+					debugger
+				}
+			});
+		}
+		function ListCityViaAddButton()
+		{
+			IdProvince = $('#SLCProvince').val()
+			$.ajax({
+				url: '/account/API/ApiCityList/' + parseInt(IdProvince),
+				type: 'GET',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				success: function (arg) {
+					debugger
+					$('#IdCity').empty()
+					for (let i = 0; i < arg.length; i++)
+					{
+						if(i == arg.length)
+							$('#IdCity').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+						else
+							$('#IdCity').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+					}
+				},
+				error:function(error){
+
+					alert("219خطایی رخ داد!");
+					debugger
+				}
+			});
+		}
+		function ListCityViaCall()
+		{
+			IdProvince = $('#SLCProvince').val()
+			if(IdProvince == null)
+			{
+				IdProvince = 1
+			}
+			$.ajax({
+				url: '/account/API/ApiCityList/' + parseInt(IdProvince),
+				type: 'GET',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				success: function (arg) {
+					debugger
+					$('#IdCity').empty()
+					for (let i = 0; i < arg.length; i++)
+					{
+						if(i == arg.length)
+							$('#IdCity').append("<option selected value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+						else
+							$('#IdCity').append("<option value='" + arg[i].Id + "'>" + arg[i].Name + "</option>")
+					}
+				},
+				error:function(error){
+
+					alert("248خطایی رخ داد!");
+					debugger
+				}
+			});
+		}
+	$(document).ready(function(){
+		$("#IdCity").select2();
+		$("#SLCProvince").select2();
+		debugger
+		LOC = location.href.toString().search("update")
+		LOC2 = location.href.toString().search("Update")
+		if(LOC != -1 | LOC2 != -1){
+			LblProvince = document.getElementById("LblProvince").innerHTML
+			LBlCity = document.getElementById("LBlCity").innerHTML
+			ListProvince()
+			ChooseProvince()
+			ListCity(0);
+		}
+		else{
+			ListProvince()
+			ChooseProvince()
+			ListCity(0);
+		}
+		
+		$('#SLCProvince').change(function(){
+			ChooseProvince();
+		});
+
+		$('#BtnSaveProvince').click(function(){
+			var TxtName = $('#TxtNameProvince').val()
+			$.ajax({
+				url: '{% url 'account:ApiListProvince' %}',
+				type: 'POST',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				data:JSON.stringify({'Name': TxtName}),
+				success: function (arg) {
+					ListProvinceViaAddButton();
+					$('#myModalProvince').modal('hide')
+					$(".modal-backdrop").remove();
+				},
+				error:function(error){
+					alert("نام استان ثبت نشد!");
+				}
+			});
+		});
+		$('#BtnSaveCity').click(function(){
+			var TxtName = $('#TxtNameCity').val()
+			var IdProvince = $('#SLCProvince').val()
+			$.ajax({
+				url: '{% url 'account:ApiCityList' %}',
+				type: 'POST',
+				dataType:"json",
+				contentType:"application/json;charset=utf-8",
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+				},
+				data:JSON.stringify({'Name': TxtName,'IdProvince':IdProvince}),
+				success: function (arg) {
+					ListCityViaAddButton();
+					$('#myModalCity').modal('hide')
+					$(".modal-backdrop").remove();
+				},
+				error:function(error){
+					alert("نام استان ثبت نشد!");
+				}
+			});
+		});
+	});
+</script>

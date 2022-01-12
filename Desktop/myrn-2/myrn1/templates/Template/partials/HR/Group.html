@@ -1,0 +1,45 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<div class="modal fade" id="myModelGroup" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+                <input type="text" class="textinput textInput form-control" required id="HRGRPName"/>
+             
+                <input type="button" class="btn btn-success" id="SaveGroup" value="ثبت"/>
+			</div>
+			<div class="modal-footer">
+			<button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
+			</div>
+		</div>
+	</div>
+</div>
+<label style="opacity:0;" id="LBlGroup">{{object.IdGroup.Id}}</label>
+<script>
+    var LOC = location.href.toString().search("update")
+    $('#SaveGroup').click(function(){
+		var Name = $('#HRGRPName').val()
+		$.ajax({
+			url: '{% url 'HR:APIGroup' %}',
+			type: 'POST',
+			dataType:"json",
+			contentType:"application/json;charset=utf-8",
+			beforeSend: function (xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+			},
+			data:JSON.stringify({'Title':Name}),
+			success: function (arg) {
+				Group()
+				$('#myModelGroup').modal('hide')
+				$(".modal-backdrop").remove();
+			},
+			error:function(error){
+				alert("39-خطایی رخ داده است!")
+			}
+		});
+	});
+</script>
