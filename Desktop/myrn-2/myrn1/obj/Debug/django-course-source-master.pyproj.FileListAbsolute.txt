@@ -1,3 +1,0 @@
-G:\Project-Cop-20210205\django-course-source-master\dj\django-course-source-master\obj\Debug\django-course-source-master.pyproj.CoreCompileInputs.cache
-G:\Project-Cop-20210205\django-course-source-master\dj\django-course-source-master\bin\Microsoft.PythonTools.WebRole.dll
-G:\Project-Cop-20210205\django-course-source-master\dj\django-course-source-master\bin\wfastcgi.py
